@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Connection {
 	
-	private String SERVICE_URL = "http://localhost:8081/BookStoreServlet/updateBook";	
+	private String SERVICE_URL = "http://localhost:8081/BookStoreServlet/deleteBook";	
 	private static Connection singletonCon = null;
 	
 	private Connection ( ) {		
