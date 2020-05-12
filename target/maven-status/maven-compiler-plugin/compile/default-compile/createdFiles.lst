@@ -1,3 +1,6 @@
-Connections/Connection$1.class
 Main.class
-Connections/Connection.class
+Entity/Author.class
+Connections/AuthorConnections.class
+Connections/Connections.class
+Connections/Connections$1.class
+AuthorOperationsUI.class

@@ -10,17 +10,17 @@ import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class Connection {
+public class Connections {
 	
 	private String SERVICE_URL = "http://localhost:8081/BookStoreServlet/deleteBook";	
-	private static Connection singletonCon = null;
+	private static Connections singletonCon = null;
 	
-	private Connection ( ) {		
+	private Connections ( ) {		
 	}
 	
-	public static Connection getConnection () {
+	public static Connections getConnection () {
 		if (singletonCon == null) {
-			singletonCon = new Connection ();
+			singletonCon = new Connections ();
 		}		
 		return singletonCon;
 	}	

@@ -1,2 +1,5 @@
 /home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/Main.java
-/home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/Connections/Connection.java
+/home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/Connections/AuthorConnections.java
+/home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/Connections/Connections.java
+/home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/Entity/Author.java
+/home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/AuthorOperationsUI.java
