@@ -32,7 +32,7 @@ public class AuthorConnections{
 		return singletonCon;
 	}
 	
-	public void addNewAuthor (Author newAuthor) throws IOException, ClassNotFoundException  {
+	public String addNewAuthor (Author newAuthor) throws IOException, ClassNotFoundException  {
 		
 		URL obj = new URL(SERVICE_URL + "/authors/addBook");
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -53,6 +53,16 @@ public class AuthorConnections{
 		OutputStream os = con.getOutputStream();
 		os.write(requestBody, 0, requestBody.length);           
 		int responseCode = con.getResponseCode();
+		
+		String responseLine = null;
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+		StringBuilder response = new StringBuilder();
+		
+		while ((responseLine = br.readLine()) != null) {
+			response.append("\n" + responseLine.trim());
+		}		
+		return response.toString();
 		
 	}
 	

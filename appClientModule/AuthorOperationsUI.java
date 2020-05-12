@@ -25,28 +25,44 @@ public class AuthorOperationsUI {
 	}
 	
 	public void showAuthorOperations () {
-		System.out.println ("\n");
-		System.out.print("\033[H\033[2J");
-		System.out.flush();
-		System.out.println ("\n------------------ Online Book Store ------------------");
-		System.out.println ("\n------------- Author Operations -------------");
-		System.out.println ("1. Add a New Author");
-		System.out.println ("2. Delete an Author");
-		System.out.println ("3. Update Autor Details");
-		System.out.println ("4. View Autor Details");
-		System.out.println ("5. View All Autor Details");
-		System.out.print ("Please Select Your Operation [1,2,3,4,5]..Press -1 To Terminate : ");
-		Scanner scn = new Scanner (System.in);
+		boolean chk =  true;
 		
-		int choice = 0;		
+		while (chk) {
+			System.out.println ("\n");
+			System.out.print("\033[H\033[2J");
+			System.out.flush();
+			System.out.println ("\n------------------ Online Book Store ------------------");
+			System.out.println ("\n------------- Author Operations -------------");
+			System.out.println ("1. Add a New Author");
+			System.out.println ("2. Delete an Author");
+			System.out.println ("3. Update Autor Details");
+			System.out.println ("4. View Autor Details");
+			System.out.println ("5. View All Autor Details");
+			System.out.print ("Please Select Your Operation [1,2,3,4,5]..Press -1 To Terminate : ");
+			Scanner scn = new Scanner (System.in);
 		
-		while (true) {	
+			int choice = 0;			
 		
 			try { 
 				choice = scn.nextInt();
 			
 				switch (choice) {
-					case 1 : addNewAuthorUI ();
+					case 1 : String response = addNewAuthorUI ();
+							 System.out.println ("\n");
+							 System.out.println("\f");
+							 System.out.flush();
+						     System.out.println (response);
+							 
+							 new java.util.Timer().schedule( 
+								new java.util.TimerTask() {
+									@Override
+									public void run() {
+										//mainCon.showMainMenu();
+									}
+								}, 
+								5000 
+							 );
+							 scn.close();
 							 break;
 				
 					case 2 : break;
@@ -61,22 +77,24 @@ public class AuthorOperationsUI {
 							  scn.close();
 						  	  System.exit(0);
 						  
-					default : System.out.println ("Invalid Option Choosen");
+					default : System.out.println ("Invalid Option Choosen. \n You Need To Enter An Integer From 1,2,3,-1");
 				}
 			}
 			catch (InputMismatchException e) {
 				System.out.println ("You Need To Enter An Integer From 1,2,3,-1");
+				scn.close();
 			}
 			catch (Exception e) {
 				System.out.println ("General Error Occured");
+				scn.close();
 				mainCon.showMainMenu();
 			}	
 		}
 	}
 	
-	void addNewAuthorUI () {
+	String addNewAuthorUI () {
 		
-		String fstName, mdleName, lastName, originCountry = "";
+		String fstName, mdleName, lastName, originCountry, status= "";
 		scn =  new Scanner (System.in).useDelimiter("\n");;
 		
 		System.out.println ("\n");
@@ -99,23 +117,22 @@ public class AuthorOperationsUI {
 			AuthorConnections con = AuthorConnections.getConnection();
 			
 			try {
-				con.addNewAuthor(obj);
+				status = con.addNewAuthor(obj);					
 			}
 			catch (MalformedURLException e) {
-				System.out.println ("MalformedURLException");
+				status = e.getMessage();			
 			}
 			catch (ProtocolException e) {
-				System.out.println ("ProtocolException");
+				status = e.getMessage();
 			}
 			catch (IOException e) {
-				System.out.println ("\n\n Sorry. Something Went Worng");
-				Main.getMainCon();
+				status = "\n\n Sorry. Something Went Worng";
 			}
 		}
 		catch (Exception e) {
 			showAuthorOperations();
 		}
-		
+	  return status;
 	}
 
 }

@@ -8,7 +8,7 @@ import Connections.Connections;
 public class Main {
 	
 	private static Main mainCon;
-	
+		
 	private Main () {
 		
 	}
@@ -20,22 +20,28 @@ public class Main {
 		return mainCon;
 	}
 	
-	void showMainMenu () {
-		System.out.println("\f");
-		System.out.flush();
-		System.out.println ("------------------ Online Book Store ------------------");
-		System.out.println ("\n------------- Main Menu -------------");
-		System.out.println ("1. Book Operations");
-		System.out.println ("2. Author Operations");
-		System.out.println ("3. Publisher Operations");
-		System.out.print   ("Please Select Your Operation [1,2,3].Press -1 To Terminate : ");
-		Scanner scn = new Scanner (System.in);
-		int choice = 0;		
+	public void showMainMenu () {
 		
-		while (true) {	
+		while (true) {
+			Scanner scn = new Scanner (System.in);
+			System.out.println("\f");
+			System.out.flush();
+			System.out.println ("------------------ Online Book Store ------------------");
+			System.out.println ("\n------------- Main Menu -------------");
+			System.out.println ("1. Book Operations");
+			System.out.println ("2. Author Operations");
+			System.out.println ("3. Publisher Operations");
+			System.out.print   ("Please Select Your Operation [1,2,3].Press -1 To Terminate : ");
 		
+			System.out.println ("Scanner check");
+			int choice = 0;		
+				
 			try { 
+				System.out.println ("try check");
 				choice = scn.nextInt();
+				scn.reset();
+				System.out.println ("After Capture");
+				System.out.println (choice);
 			
 				switch (choice) {
 					case 1 : break;
@@ -50,14 +56,16 @@ public class Main {
 							  scn.close();
 						  	  System.exit(0);
 						  
-					default : System.out.println ("Invalid Option Choosen. \n You Need To Enter An Integer From 1,2,3,-1");
+					default : System.out.println ("Invalid Option Choosen. \n You Need To ENTER An Integer From 1,2,3,-1");
 				}
 			}
 			catch (InputMismatchException e) {
 				System.out.println ("Invalid Input Type. \n You Need To Enter An Integer From 1,2,3,-1");
+				scn.close();
 			}
 			catch (Exception e) {
 				System.out.println ("General Error Occured");
+				scn.close();
 			}		
 		}
 		
