@@ -148,18 +148,33 @@ public class AuthorOperationsUI {
 			
 			RequestPayLoadGenerator payLoadGenCon = RequestPayLoadGenerator.getConnection();
 			
+			
 			if (reqContentType.equals("text")) {
 				payload = payLoadGenCon.textPayLoadGenerator(authorObj);
+				reqContentType = reqContentType +"/plain; charset=utf-8";
 			}
 			else if (reqContentType.equals("json")) {
 				payLoadGenCon.textPayLoadGenerator(authorObj);
+				reqContentType = "/application/json; utf-8";
 			} 
 			else if (reqContentType.equals("xml")) {
 				payLoadGenCon.textPayLoadGenerator(authorObj);
+				reqContentType = "application/xml";
 			}
 			
+			if (resContentType.equals("text")) {
+				resContentType = resContentType +"/plain; charset=utf-8";
+			}
+			else if (resContentType.equals("json")) {
+				resContentType = "/application/json; utf-8";
+			} 
+			else if (resContentType.equals("xml")) {
+				resContentType = "application/xml";
+			} 
+			
+						
 			try {
-				status = AuthorCon.addNewAuthor(payload);					
+				status = AuthorCon.addNewAuthor(payload, reqContentType,resContentType );					
 			}
 			catch (MalformedURLException e) {
 				status = e.getMessage();			

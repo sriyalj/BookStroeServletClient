@@ -33,16 +33,14 @@ public class AuthorConnections{
 	}
 		
 		
-	public String addNewAuthor (byte [] requestBody) throws IOException, ClassNotFoundException  {
+	public String addNewAuthor (byte [] requestBody, String reqContentType, String resContentType ) throws IOException, ClassNotFoundException  {
 		
 		URL obj = new URL(SERVICE_URL + "/authors/addBook");
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("POST");
-		con.addRequestProperty ("Request-Type", "text/plain; charset=utf-8");
-		con.addRequestProperty ("Content-Type", "Json/plain; charset=utf-8");
-		con.setDoOutput(true);
-		
-		
+		con.addRequestProperty ("Accept", resContentType);
+		con.addRequestProperty ("Content-Type", reqContentType);
+		con.setDoOutput(true);	
 		
 	   	OutputStream os = con.getOutputStream();
 		os.write(requestBody, 0, requestBody.length); 
