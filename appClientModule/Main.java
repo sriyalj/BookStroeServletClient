@@ -3,14 +3,13 @@ import java.util.Base64;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-import Connections.Connections;
-
 public class Main {
 	
 	private static Main mainCon;
+	private Scanner scn;
 		
 	private Main () {
-		
+		//scn =  new Scanner (System.in);
 	}
 	
 	public static Main getMainCon () {
@@ -21,9 +20,10 @@ public class Main {
 	}
 	
 	public void showMainMenu () {
-		
+				
 		while (true) {
-			Scanner scn = new Scanner (System.in);
+			String response = "";
+			scn =  new Scanner (System.in);
 			System.out.println("\f");
 			System.out.flush();
 			System.out.println ("------------------ Online Book Store ------------------");
@@ -32,40 +32,90 @@ public class Main {
 			System.out.println ("2. Author Operations");
 			System.out.println ("3. Publisher Operations");
 			System.out.print   ("Please Select Your Operation [1,2,3].Press -1 To Terminate : ");
-		
-			System.out.println ("Scanner check");
+			
 			int choice = 0;		
 				
-			try { 
-				System.out.println ("try check");
+			try { 				
 				choice = scn.nextInt();
-				scn.reset();
-				System.out.println ("After Capture");
-				System.out.println (choice);
-			
+							
 				switch (choice) {
 					case 1 : break;
 				
-					case 2 : AuthorOperationsUI AuthorOperationsUICon = AuthorOperationsUI.getConnection(Main.getMainCon());
-							 AuthorOperationsUICon.showAuthorOperations();
+					case 2 : AuthorOperationsUI AuthorOperationsUICon = AuthorOperationsUI.getConnection();
+							 response = AuthorOperationsUICon.showAuthorOperations();
+							 System.out.println ("\n");
+						     System.out.print("\033[H\033[2J");
+					  		 System.out.flush();
+							 System.out.println (response);
+							 
+							 new java.util.Timer().schedule( 
+								new java.util.TimerTask() {
+									@Override
+									public void run() {
+										//mainCon.showMainMenu();
+									}
+								}, 
+								25000 
+							 );
 							 break;
 				
 					case 3 : break;
 				
-					case -1 : System.out.println ("Exiting the System\n");
-							  scn.close();
+					case -1 : System.out.println ("\n");
+						      System.out.print("\033[H\033[2J");
+					  		  System.out.flush();
+					  		  System.out.println ("Exiting the System\n");
 						  	  System.exit(0);
 						  
-					default : System.out.println ("Invalid Option Choosen. \n You Need To ENTER An Integer From 1,2,3,-1");
+					default : System.out.println ("\n");
+							  System.out.print("\033[H\033[2J");
+							  System.out.flush();
+							  System.out.println ("Invalid Option Choosen. \nYou Need To Choose An Integer From 1,2,3,-1");
+							  
+							  new java.util.Timer().schedule( 
+										new java.util.TimerTask() {
+											@Override
+											public void run() {
+												
+											}
+										}, 
+										25000 
+									 );
 				}
 			}
 			catch (InputMismatchException e) {
-				System.out.println ("Invalid Input Type. \n You Need To Enter An Integer From 1,2,3,-1");
-				scn.close();
+				System.out.println ("\n");
+		  		System.out.print("\033[H\033[2J");
+                System.out.flush();
+				System.out.println ("\nInvalid Input Type. \nYou Need To Enter An Integer From 1,2,3,-1");
+				
+				new java.util.Timer().schedule( 
+						new java.util.TimerTask() {
+							@Override
+							public void run() {
+								
+							}
+						}, 
+						25000 
+					 );
 			}
 			catch (Exception e) {
-				System.out.println ("General Error Occured");
-				scn.close();
+				System.out.println ("\n");
+				System.out.print("\033[H\033[2J");
+                System.out.flush();
+				System.out.println ("\nGeneral Error Occured. \nExiting The System");
+				e.printStackTrace();
+				
+				new java.util.Timer().schedule( 
+						new java.util.TimerTask() {
+							@Override
+							public void run() {
+								System.exit(0);
+							}
+						}, 
+						25000 
+					 );
+				
 			}		
 		}
 		

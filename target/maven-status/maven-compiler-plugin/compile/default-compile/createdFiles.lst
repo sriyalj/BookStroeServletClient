@@ -1,4 +1,5 @@
 Main.class
+AuthorOperationsUI$1.class
 Entity/Author.class
 Connections/AuthorConnections.class
 Connections/Connections.class

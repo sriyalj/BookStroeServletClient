@@ -31,28 +31,21 @@ public class AuthorConnections{
 		}		
 		return singletonCon;
 	}
-	
-	public String addNewAuthor (Author newAuthor) throws IOException, ClassNotFoundException  {
+		
+		
+	public String addNewAuthor (byte [] requestBody) throws IOException, ClassNotFoundException  {
 		
 		URL obj = new URL(SERVICE_URL + "/authors/addBook");
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("POST");
-		con.setRequestProperty("Content-Type", "text/plain; charset=utf-8"); 
+		con.addRequestProperty ("Request-Type", "text/plain; charset=utf-8");
+		con.addRequestProperty ("Content-Type", "Json/plain; charset=utf-8");
 		con.setDoOutput(true);
 		
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	    ObjectOutputStream oos = new ObjectOutputStream(bos);
-	    oos.writeObject(newAuthor);
-	    oos.flush();
-	    byte [] requestBody = bos.toByteArray();
 		
-	    ByteArrayInputStream in = new ByteArrayInputStream(requestBody);
-	    ObjectInputStream ois = new ObjectInputStream(in);
-	    Author authorObj = (Author)ois.readObject();
-	    	    
-		OutputStream os = con.getOutputStream();
-		os.write(requestBody, 0, requestBody.length);           
-		int responseCode = con.getResponseCode();
+		
+	   	OutputStream os = con.getOutputStream();
+		os.write(requestBody, 0, requestBody.length); 
 		
 		String responseLine = null;
 		
