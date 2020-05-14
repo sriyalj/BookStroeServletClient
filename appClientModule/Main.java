@@ -2,6 +2,10 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+//import DBConn.AuthorDBConn;
 
 public class Main {
 	
@@ -57,17 +61,12 @@ public class Main {
 							  System.out.flush();
 							  System.out.println ("Invalid Option Choosen. \nYou Need To Choose An Integer From 1,2,3,-1");
 							  
-							  new java.util.Timer().schedule( 
-										new java.util.TimerTask() {
-											@Override
-											public void run() {
-												System.out.println ("\n");
-											    System.out.print("\033[H\033[2J");
-										  		System.out.flush();												
-											}
-										}, 
-										25000 
-									 );
+							  try {
+								  Thread.sleep(3000);        
+							  } 
+							  catch( InterruptedException ex) {  
+								   Thread.currentThread().interrupt();
+							  }
 				}
 			}
 			catch (InputMismatchException e) {
@@ -76,24 +75,20 @@ public class Main {
                 System.out.flush();
 				System.out.println ("\nInvalid Input Type. \nYou Need To Enter An Integer From 1,2,3,-1");
 				
-				new java.util.Timer().schedule( 
-						new java.util.TimerTask() {
-							@Override
-							public void run() {
-								System.out.println ("\n");
-							    System.out.print("\033[H\033[2J");
-						  		System.out.flush();								
-							}
-						}, 
-						25000 
-					 );
+				try {
+					Thread.sleep(3000);        
+				} 
+				catch( InterruptedException ex) {  
+					Thread.currentThread().interrupt();
+				}
 			}
 			catch (Exception e) {
 				System.out.println ("\n");
 				System.out.print("\033[H\033[2J");
                 System.out.flush();
 				System.out.println ("\nGeneral Error Occured. \nExiting The System");
-				e.printStackTrace();
+				Logger lgr = Logger.getLogger(Main.class.getName());
+	            lgr.log(Level.SEVERE, e.getMessage(), e);
 				
 				new java.util.Timer().schedule( 
 						new java.util.TimerTask() {
@@ -102,7 +97,7 @@ public class Main {
 								System.exit(0);
 							}
 						}, 
-						25000 
+						5000 
 					 );
 				
 			}		

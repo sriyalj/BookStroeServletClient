@@ -1,6 +1,8 @@
 package Util;
 
-public class ResponseMsgs {
+import java.io.Serializable;
+
+public class ResponseMsgs implements Serializable{
 	
 	private String Msg;
 	

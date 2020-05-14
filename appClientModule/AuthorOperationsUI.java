@@ -60,26 +60,24 @@ public class AuthorOperationsUI {
 							 System.out.flush();
 							 
 							 if (response instanceof GeneralServerResponseMsgs) {
+								 System.out.println ("Server Response");
 								 GeneralServerResponseMsgs obj = (GeneralServerResponseMsgs) response;
 								 System.out.println (obj.getServerResponseCode());
 								 System.out.println (obj.getMsg());
+								 System.out.println ("\n");
 							 }
 							 else {
 								 GeneralClientResponseMsgs obj = (GeneralClientResponseMsgs)response;
 								 System.out.println (obj.getMsg());
+								 System.out.println ("\n");
 							 }
 							 chk = false;
-							 new java.util.Timer().schedule( 
-										new java.util.TimerTask() {
-											@Override
-											public void run() {
-												System.out.println ("\n");
-											    System.out.print("\033[H\033[2J");
-										  		System.out.flush();
-											}
-										}, 
-										5000 
-							  );
+							 try {
+							     Thread.sleep(3000);        
+							 } 
+							 catch( InterruptedException ex) {  
+							      Thread.currentThread().interrupt();
+							 }
 						  	 
 							 break;
 				
@@ -97,34 +95,27 @@ public class AuthorOperationsUI {
 					          System.out.println ("Exiting the System");
 					          
 					          new java.util.Timer().schedule( 
-										new java.util.TimerTask() {
-											@Override
-											public void run() {
-												System.out.println ("\n");
-											    System.out.print("\033[H\033[2J");
-										  		System.out.flush();
-											}
-										}, 
-										5000 
-							  );
-						  	 break; 
+					  				new java.util.TimerTask() {
+					  					@Override
+					  					public void run() {
+					  						System.exit(0);;
+					  					}
+					  				}, 
+					  				5000 
+					  			 );
+						  	   
 						  
 					default : System.out.println ("\n");
 					  		  System.out.print("\033[H\033[2J");
 			                  System.out.flush();
 			                  System.out.println ("Invalid Option Choosen. \nYou Need To Enter An Integer From 1,2,3,-1");
 			                  
-			                  new java.util.Timer().schedule( 
-										new java.util.TimerTask() {
-											@Override
-											public void run() {
-												System.out.println ("\n");
-											    System.out.print("\033[H\033[2J");
-										  		System.out.flush();
-											}
-										}, 
-										5000 
-								);
+			                  try {
+								  Thread.sleep(3000);        
+							  } 
+							  catch( InterruptedException ex) {  
+								   Thread.currentThread().interrupt();
+							  }
 				}
 			}
 			catch (InputMismatchException e) {
@@ -133,17 +124,12 @@ public class AuthorOperationsUI {
                 System.out.flush();
 				System.out.println ("\nInvalid Input Type. \nYou Need To Enter An Integer From 1,2,3,-1");
 				
-				new java.util.Timer().schedule( 
-						new java.util.TimerTask() {
-							@Override
-							public void run() {
-								System.out.println ("\n");
-							    System.out.print("\033[H\033[2J");
-						  		System.out.flush();
-							}
-						}, 
-						5000 
-					 );
+				try {
+				   Thread.sleep(3000);        
+				} 
+				catch( InterruptedException ex) {  
+				   Thread.currentThread().interrupt();
+			    }
 			}
 			catch (Exception e) {
 				System.out.println ("\n");
@@ -152,17 +138,12 @@ public class AuthorOperationsUI {
                 System.out.println ("\nGeneral Error Occured");
 				chk = false;
 				
-				new java.util.Timer().schedule( 
-						new java.util.TimerTask() {
-							@Override
-							public void run() {
-								System.out.println ("\n");
-							    System.out.print("\033[H\033[2J");
-						  		System.out.flush();
-							}
-						}, 
-						5000 
-					 );
+				try {
+				   Thread.sleep(3000);        
+				} 
+				catch( InterruptedException ex) {  
+				   Thread.currentThread().interrupt();
+				}
 			}	
 		}		
 	}
@@ -211,6 +192,16 @@ public class AuthorOperationsUI {
 				payLoadGenCon.textPayLoadGenerator(authorObj);
 				reqContentType = "application/xml";
 			}
+			else {
+				System.out.println ("\n");
+				System.out.print("\033[H\033[2J");
+				System.out.flush();
+				System.out.println ("\n\n Wrong Request Type Entered");
+				
+				serverRes = GeneralClientResponseMsgs.getConnection ();
+				serverRes.setMsg("\nWrong Request Type");
+				return serverRes;				
+			}
 			
 			if (resContentType.equals("text")) {
 				resContentType = resContentType +"/plain; charset=utf-8";
@@ -221,6 +212,17 @@ public class AuthorOperationsUI {
 			else if (resContentType.equals("xml")) {
 				resContentType = "application/xml";
 			} 
+			else {
+				System.out.println ("\n");
+				System.out.print("\033[H\033[2J");
+				System.out.flush();
+				System.out.println ("\n\n Wrong Request Type Entered");
+				
+				serverRes = GeneralClientResponseMsgs.getConnection ();
+				serverRes.setMsg("\nWrong Request Type");
+				return serverRes;
+				
+			}
 			
 			try {
 				AuthorCon = AuthorConnections.getConnection();
@@ -249,17 +251,18 @@ public class AuthorOperationsUI {
 			System.out.println ("\n");
 			System.out.print("\033[H\033[2J");
 			System.out.flush();
+			System.out.println ("\n\n Sorry. Something Went Worng");
 			 
 			 new java.util.Timer().schedule( 
 				new java.util.TimerTask() {
 					@Override
 					public void run() {
-						System.out.println ("\n\n Sorry. Something Went Worng");
+						showAuthorOperations();
 					}
 				}, 
 				5000 
 			 );
-			showAuthorOperations();
+			
 		}
 	  return serverRes;
 	}
