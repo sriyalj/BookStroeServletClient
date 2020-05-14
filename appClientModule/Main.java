@@ -22,7 +22,6 @@ public class Main {
 	public void showMainMenu () {
 				
 		while (true) {
-			String response = "";
 			scn =  new Scanner (System.in);
 			System.out.println("\f");
 			System.out.flush();
@@ -42,21 +41,7 @@ public class Main {
 					case 1 : break;
 				
 					case 2 : AuthorOperationsUI AuthorOperationsUICon = AuthorOperationsUI.getConnection();
-							 response = AuthorOperationsUICon.showAuthorOperations();
-							 System.out.println ("\n");
-						     System.out.print("\033[H\033[2J");
-					  		 System.out.flush();
-							 System.out.println (response);
-							 
-							 new java.util.Timer().schedule( 
-								new java.util.TimerTask() {
-									@Override
-									public void run() {
-										//mainCon.showMainMenu();
-									}
-								}, 
-								25000 
-							 );
+							 AuthorOperationsUICon.showAuthorOperations();
 							 break;
 				
 					case 3 : break;
@@ -76,7 +61,9 @@ public class Main {
 										new java.util.TimerTask() {
 											@Override
 											public void run() {
-												
+												System.out.println ("\n");
+											    System.out.print("\033[H\033[2J");
+										  		System.out.flush();												
 											}
 										}, 
 										25000 
@@ -93,7 +80,9 @@ public class Main {
 						new java.util.TimerTask() {
 							@Override
 							public void run() {
-								
+								System.out.println ("\n");
+							    System.out.print("\033[H\033[2J");
+						  		System.out.flush();								
 							}
 						}, 
 						25000 

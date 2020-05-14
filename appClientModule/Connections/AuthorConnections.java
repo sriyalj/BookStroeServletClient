@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Entity.Author;
+import Util.GeneralServerResponseMsgs;
 
 public class AuthorConnections{
 	
@@ -33,7 +35,7 @@ public class AuthorConnections{
 	}
 		
 		
-	public String addNewAuthor (byte [] requestBody, String reqContentType, String resContentType ) throws IOException, ClassNotFoundException  {
+	public byte [] addNewAuthor (byte [] requestBody, String reqContentType, String resContentType ) throws IOException, ClassNotFoundException  {
 		
 		URL obj = new URL(SERVICE_URL + "/authors/addBook");
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -41,19 +43,25 @@ public class AuthorConnections{
 		con.addRequestProperty ("Accept", resContentType);
 		con.addRequestProperty ("Content-Type", reqContentType);
 		con.setDoOutput(true);	
+		con.setConnectTimeout(5000);
+        con.setReadTimeout(5000);
 		
 	   	OutputStream os = con.getOutputStream();
 		os.write(requestBody, 0, requestBody.length); 
 		
-		String responseLine = null;
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+		try (InputStream inputStream = con.getInputStream()) {
+		  int n = 0;
+		  byte[] buffer = new byte[1024];
+		  while (-1 != (n = inputStream.read(buffer))) {
+		    output.write(buffer, 0, n);
+		  }
+		}
+		byte[] serverRes = output.toByteArray();
 		
-		BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
-		StringBuilder response = new StringBuilder();
+		return serverRes;
 		
-		while ((responseLine = br.readLine()) != null) {
-			response.append("\n" + responseLine.trim());
-		}		
-		return response.toString();
 		
 	}
 	
@@ -62,3 +70,15 @@ public class AuthorConnections{
 	
 
 }
+
+/*
+String responseLine = null;
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+		StringBuilder response = new StringBuilder();
+		
+		while ((responseLine = br.readLine()) != null) {
+			response.append("\n" + responseLine.trim());
+		}		
+		return response.toString();
+*/

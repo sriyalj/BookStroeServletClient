@@ -6,12 +6,17 @@ import java.util.Scanner;
 
 import Connections.AuthorConnections;
 import Entity.Author;
+import Util.GeneralClientResponseMsgs;
+import Util.GeneralServerResponseMsgs;
+import Util.ObjectGeneratorFromPayLoad;
 import Util.RequestPayLoadGenerator;
+import Util.ResponseMsgs;
 
 
 public class AuthorOperationsUI {
 	
 	private static AuthorOperationsUI con;
+	private AuthorConnections AuthorCon;
 	private Scanner scn;
 	
 	private AuthorOperationsUI () {
@@ -24,9 +29,8 @@ public class AuthorOperationsUI {
 		return con;
 	}
 	
-	public String showAuthorOperations () {
-		boolean chk =  true;
-		String response = "";		
+	public void showAuthorOperations () {
+		boolean chk =  true;		
 		
 		while (chk) {
 			System.out.println ("\n");
@@ -49,8 +53,34 @@ public class AuthorOperationsUI {
 				choice = scn.nextInt();
 			
 				switch (choice) {
-					case 1 : response = addNewAuthorUI ();							 
+					case 1 : ResponseMsgs response = addNewAuthorUI ();	
+					         
+							 System.out.println ("\n");
+							 System.out.print("\033[H\033[2J");
+							 System.out.flush();
+							 
+							 if (response instanceof GeneralServerResponseMsgs) {
+								 GeneralServerResponseMsgs obj = (GeneralServerResponseMsgs) response;
+								 System.out.println (obj.getServerResponseCode());
+								 System.out.println (obj.getMsg());
+							 }
+							 else {
+								 GeneralClientResponseMsgs obj = (GeneralClientResponseMsgs)response;
+								 System.out.println (obj.getMsg());
+							 }
 							 chk = false;
+							 new java.util.Timer().schedule( 
+										new java.util.TimerTask() {
+											@Override
+											public void run() {
+												System.out.println ("\n");
+											    System.out.print("\033[H\033[2J");
+										  		System.out.flush();
+											}
+										}, 
+										5000 
+							  );
+						  	 
 							 break;
 				
 					case 2 : break;
@@ -70,11 +100,13 @@ public class AuthorOperationsUI {
 										new java.util.TimerTask() {
 											@Override
 											public void run() {
-												System.exit(0);
+												System.out.println ("\n");
+											    System.out.print("\033[H\033[2J");
+										  		System.out.flush();
 											}
 										}, 
 										5000 
-									 );
+							  );
 						  	 break; 
 						  
 					default : System.out.println ("\n");
@@ -86,11 +118,13 @@ public class AuthorOperationsUI {
 										new java.util.TimerTask() {
 											@Override
 											public void run() {
-												System.exit(0);
+												System.out.println ("\n");
+											    System.out.print("\033[H\033[2J");
+										  		System.out.flush();
 											}
 										}, 
 										5000 
-									 );
+								);
 				}
 			}
 			catch (InputMismatchException e) {
@@ -103,24 +137,42 @@ public class AuthorOperationsUI {
 						new java.util.TimerTask() {
 							@Override
 							public void run() {
-								System.exit(0);
+								System.out.println ("\n");
+							    System.out.print("\033[H\033[2J");
+						  		System.out.flush();
 							}
 						}, 
 						5000 
 					 );
 			}
 			catch (Exception e) {
-				response = "General Error Occured";
+				System.out.println ("\n");
+		  		System.out.print("\033[H\033[2J");
+                System.out.flush();
+                System.out.println ("\nGeneral Error Occured");
 				chk = false;
+				
+				new java.util.Timer().schedule( 
+						new java.util.TimerTask() {
+							@Override
+							public void run() {
+								System.out.println ("\n");
+							    System.out.print("\033[H\033[2J");
+						  		System.out.flush();
+							}
+						}, 
+						5000 
+					 );
 			}	
-		}
-		return response;
+		}		
 	}
 	
-	String addNewAuthorUI () {
+	ResponseMsgs addNewAuthorUI () {
 		
-		String fstName = "", mdleName = "", lastName = "", originCountry = "", status = "", reqContentType = "", resContentType = "";
+		String fstName = "", mdleName = "", lastName = "", originCountry = "", reqContentType = "", resContentType = "";
 		byte [] payload = null;
+		byte [] response = null;
+		ResponseMsgs serverRes = null;
 		scn =  new Scanner (System.in).useDelimiter("\n");;
 		
 		System.out.println ("\n");
@@ -144,10 +196,8 @@ public class AuthorOperationsUI {
 			resContentType = scn.next();
 			
 			Author authorObj = new Author (fstName,mdleName,lastName,originCountry);
-			AuthorConnections AuthorCon = AuthorConnections.getConnection();
 			
-			RequestPayLoadGenerator payLoadGenCon = RequestPayLoadGenerator.getConnection();
-			
+			RequestPayLoadGenerator payLoadGenCon = RequestPayLoadGenerator.getConnection();			
 			
 			if (reqContentType.equals("text")) {
 				payload = payLoadGenCon.textPayLoadGenerator(authorObj);
@@ -172,24 +222,33 @@ public class AuthorOperationsUI {
 				resContentType = "application/xml";
 			} 
 			
-						
 			try {
-				status = AuthorCon.addNewAuthor(payload, reqContentType,resContentType );					
+				AuthorCon = AuthorConnections.getConnection();
+				response = AuthorCon.addNewAuthor(payload, reqContentType,resContentType );	
+				ObjectGeneratorFromPayLoad objFromPayLoad = ObjectGeneratorFromPayLoad.getConnection();
+				serverRes = (GeneralServerResponseMsgs)objFromPayLoad.getObjectFromText(response);				
 			}
 			catch (MalformedURLException e) {
-				status = e.getMessage();			
+				serverRes = GeneralClientResponseMsgs.getConnection();
+				serverRes.setMsg(e.getMessage());
 			}
 			catch (ProtocolException e) {
-				status = e.getMessage();
+				serverRes = GeneralClientResponseMsgs.getConnection ();
+				serverRes.setMsg(e.getMessage());
 			}
 			catch (IOException e) {
-				status = "\nGeneral Connection Error Occured";
+				serverRes = GeneralClientResponseMsgs.getConnection ();
+				serverRes.setMsg("\nGeneral Connection Error Occured");
 			}
 			catch (Exception e) {
-				status = "\nGeneral Error Occured";
+				GeneralClientResponseMsgs.getConnection ();
+				serverRes.setMsg("\nGeneral Error Occured");
 			}
 		}
 		catch (Exception e) {
+			System.out.println ("\n");
+			System.out.print("\033[H\033[2J");
+			System.out.flush();
 			 
 			 new java.util.Timer().schedule( 
 				new java.util.TimerTask() {
@@ -202,7 +261,7 @@ public class AuthorOperationsUI {
 			 );
 			showAuthorOperations();
 		}
-	  return status;
+	  return serverRes;
 	}
 	
 	String viewAuthorDetailsByFirstName (String fstName) {
