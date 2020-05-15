@@ -7,6 +7,10 @@ import java.io.ObjectInputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import Entity.Author;
+
 public class ObjectGeneratorFromPayLoad {
 	
 	private static ObjectGeneratorFromPayLoad con;
@@ -34,6 +38,22 @@ public class ObjectGeneratorFromPayLoad {
 		ois.close();
 			
 		return reterivedObj;
+		
+	}
+	
+
+	public Object getObjectFromJson (byte [] response) throws ClassNotFoundException, IOException  {
+		String reterivedObj = null;
+				
+		ByteArrayInputStream in = new ByteArrayInputStream(response);		
+		ObjectInputStream ois = new ObjectInputStream(in);		
+		reterivedObj = (String) ois.readObject();		
+		in.close();
+		ois.close();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		GeneralServerResponseMsgs serverMsg = mapper.readValue(reterivedObj, GeneralServerResponseMsgs.class);
+		return serverMsg;
 		
 	}
 

@@ -185,8 +185,8 @@ public class AuthorOperationsUI {
 				reqContentType = reqContentType +"/plain; charset=utf-8";
 			}
 			else if (reqContentType.equals("json")) {
-				payLoadGenCon.textPayLoadGenerator(authorObj);
-				reqContentType = "/application/json; utf-8";
+				payload = payLoadGenCon.jsonPayLoadGenerator(authorObj);
+				reqContentType = "application/json; utf-8";
 			} 
 			else if (reqContentType.equals("xml")) {
 				payLoadGenCon.textPayLoadGenerator(authorObj);
@@ -207,7 +207,7 @@ public class AuthorOperationsUI {
 				resContentType = resContentType +"/plain; charset=utf-8";
 			}
 			else if (resContentType.equals("json")) {
-				resContentType = "/application/json; utf-8";
+				resContentType = "application/json; utf-8";
 			} 
 			else if (resContentType.equals("xml")) {
 				resContentType = "application/xml";
@@ -227,8 +227,18 @@ public class AuthorOperationsUI {
 			try {
 				AuthorCon = AuthorConnections.getConnection();
 				response = AuthorCon.addNewAuthor(payload, reqContentType,resContentType );	
+				//System.out.println ("Server Response Received");
 				ObjectGeneratorFromPayLoad objFromPayLoad = ObjectGeneratorFromPayLoad.getConnection();
-				serverRes = (GeneralServerResponseMsgs)objFromPayLoad.getObjectFromText(response);				
+				
+				
+				if (resContentType.contentEquals("text/plain; charset=utf-8")) {
+					serverRes = (GeneralServerResponseMsgs)objFromPayLoad.getObjectFromText(response);
+				}
+				
+				if (resContentType.contentEquals("application/json; utf-8")) {
+					serverRes = (GeneralServerResponseMsgs)objFromPayLoad.getObjectFromJson(response);
+				}
+								
 			}
 			catch (MalformedURLException e) {
 				serverRes = GeneralClientResponseMsgs.getConnection();

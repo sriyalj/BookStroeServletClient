@@ -15,6 +15,10 @@ public class Author implements Serializable{
 		this.lastName = lastName;
 		this.originCountry = originCountry;
 	}
+	
+	public Author () {
+		
+	}
 
 	public String getFstName() {
 		return fstName;

@@ -44,7 +44,8 @@ public class AuthorConnections{
 		con.addRequestProperty ("Content-Type", reqContentType);
 		con.setDoOutput(true);	
 		con.setConnectTimeout(5000);
-        con.setReadTimeout(5000);
+        con.setReadTimeout(5000);     
+        
 		
 	   	OutputStream os = con.getOutputStream();
 		os.write(requestBody, 0, requestBody.length); 
