@@ -189,7 +189,7 @@ public class AuthorOperationsUI {
 				reqContentType = "application/json; utf-8";
 			} 
 			else if (reqContentType.equals("xml")) {
-				payLoadGenCon.textPayLoadGenerator(authorObj);
+				payload = payLoadGenCon.xmlPayLoadGenerator(authorObj);
 				reqContentType = "application/xml";
 			}
 			else {
@@ -237,6 +237,9 @@ public class AuthorOperationsUI {
 				
 				if (resContentType.contentEquals("application/json; utf-8")) {
 					serverRes = (GeneralServerResponseMsgs)objFromPayLoad.getObjectFromJson(response);
+				}
+				if (resContentType.contentEquals("application/xml")) {
+					serverRes = (GeneralServerResponseMsgs)objFromPayLoad.getObjectFromXML(response);
 				}
 								
 			}
