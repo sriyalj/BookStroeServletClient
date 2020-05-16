@@ -171,9 +171,9 @@ public class AuthorOperationsUI {
 			lastName = scn.next();
 			System.out.print ("\nEnter Author Origin Country :");
 			originCountry = scn.next();
-			System.out.println ("\n Request Content Type [text/json/xml] :");
+			System.out.println ("\nRequest Content Type [text/json/xml] :");
 			reqContentType = scn.next();
-			System.out.println ("\n Response Content Type [text/json/xml] :");
+			System.out.println ("\nResponse Content Type [text/json/xml] :");
 			resContentType = scn.next();
 			
 			Author authorObj = new Author (fstName,mdleName,lastName,originCountry);
@@ -227,7 +227,6 @@ public class AuthorOperationsUI {
 			try {
 				AuthorCon = AuthorConnections.getConnection();
 				response = AuthorCon.addNewAuthor(payload, reqContentType,resContentType );	
-				//System.out.println ("Server Response Received");
 				ObjectGeneratorFromPayLoad objFromPayLoad = ObjectGeneratorFromPayLoad.getConnection();
 				
 				
