@@ -176,8 +176,7 @@ public class AuthorOperationsUI {
 			System.out.println ("\nResponse Content Type [text/json/xml] :");
 			resContentType = scn.next();
 			
-			Author authorObj = new Author (fstName,mdleName,lastName,originCountry);
-			
+			Author authorObj = new Author (fstName,mdleName,lastName,originCountry);			
 			RequestPayLoadGenerator payLoadGenCon = RequestPayLoadGenerator.getConnection();			
 			
 			if (reqContentType.equals("text")) {

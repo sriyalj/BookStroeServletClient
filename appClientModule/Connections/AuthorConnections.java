@@ -59,27 +59,7 @@ public class AuthorConnections{
 		    output.write(buffer, 0, n);
 		  }
 		}
-		byte[] serverRes = output.toByteArray();
-		
-		return serverRes;
-		
-		
+		byte[] serverRes = output.toByteArray();		
+		return serverRes;		
 	}
-	
-	
-	
-	
-
 }
-
-/*
-String responseLine = null;
-		
-		BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
-		StringBuilder response = new StringBuilder();
-		
-		while ((responseLine = br.readLine()) != null) {
-			response.append("\n" + responseLine.trim());
-		}		
-		return response.toString();
-*/

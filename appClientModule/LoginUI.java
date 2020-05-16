@@ -40,9 +40,9 @@ public class LoginUI {
 		System.out.println ("\n------------- Login -------------");
 		
 		try {
-			System.out.print ("\n\nUser Name : ");
+			System.out.print ("User Name : ");
 			userName = scn.next();
-			System.out.print ("\n\nPassWord : ");
+			System.out.print ("\nPassWord : ");
 			passWord = scn.next();		
 			System.out.println ("\nRequest Content Type [text/json/xml] :");
 			reqContentType = scn.next();

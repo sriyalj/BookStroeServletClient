@@ -122,14 +122,14 @@ public class Main {
 	public void login () throws IOException {
 		LoginUI.getConnection().loginService();
 		
-		
+		/*
 		
 		CookieManager cookieManager = new CookieManager();
 		CookieHandler.setDefault(cookieManager);		
 
 		List<HttpCookie> cookies = cookieManager.getCookieStore().getCookies();
 		System.out.println (cookies.isEmpty());
-		/*
+		
 		URL url = new URL("https://stackoverflow.com");
 
 		URLConnection connection = url.openConnection();
@@ -140,6 +140,7 @@ public class Main {
 		connection = url.openConnection();
 		connection.getContent();
 		*/
+		/*
 		for (HttpCookie cookie : cookies) {
 			System.out.println ("Iterating Cookies");
 		    System.out.println(cookie.getDomain());
@@ -148,6 +149,7 @@ public class Main {
 		System.out.println ("Cookie thing is over");
 		
 		//cookieManager.getCookieStore().removeAll();
+		*/
 	}
 			
 	public static void main(String[] args) throws IOException {		// TODO Auto-generated method stub
