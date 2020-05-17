@@ -18,6 +18,10 @@ public class LoginUI {
 	private Scanner scn;
 	private ArrayList <String> cookies;
 	
+	public ArrayList getCookies () {
+		return cookies;
+	}
+	
 	
 	public ResponseMsgs loginInterface () {
 		cookies = null;

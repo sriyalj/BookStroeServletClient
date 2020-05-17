@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.CookieStore;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -14,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import static java.net.CookiePolicy.ACCEPT_ORIGINAL_SERVER;
 
 
 
@@ -45,40 +48,28 @@ public class LoginConnection {
         con.setReadTimeout(5000);         
 		
 	   	OutputStream os = con.getOutputStream();
-		os.write(requestBody, 0, requestBody.length);	
+		os.write(requestBody, 0, requestBody.length);
 		
-		Map<String, List<String>> headerFields = con.getHeaderFields();
-		 
+		Map<String, List<String>> headerFields = con.getHeaderFields();		 
         Set<String> headerFieldsSet = headerFields.keySet();
         Iterator<String> hearerFieldsIter = headerFieldsSet.iterator();
         
-        while (hearerFieldsIter.hasNext()) {            
+        while (hearerFieldsIter.hasNext()){	 
             String headerFieldKey = hearerFieldsIter.next();
-             
-            if ("Set-Cookie".equalsIgnoreCase(headerFieldKey)) {                 
+ 
+            if ("Set-Cookie".equalsIgnoreCase(headerFieldKey)){
+            	System.out.println (headerFieldKey);            	
+ 
                 List<String> headerFieldValue = headerFields.get(headerFieldKey);
-                 
-                for (String headerValue : headerFieldValue) {
-                   System.out.println (headerValue);                    
-                   String[] fields = headerValue.split("=",1);
-                  // System.out.println (fields[0]);
-                   cookies.add(fields[0]);                   
-                }                 
-            }        	
-	    }
-        
-        
-        CookieManager cookieManager = new CookieManager();
-		CookieHandler.setDefault(cookieManager);
-
-		List<HttpCookie> cookies = cookieManager.getCookieStore().getCookies();
-		System.out.println (cookies.isEmpty());
-		
-		for (HttpCookie cookie : cookies) {
-			System.out.println ("Iterating Cookies");
-		    System.out.println(cookie.getDomain());
-		    System.out.println(cookie);
-		}
+ 
+                for (String headerValue : headerFieldValue){
+                    System.out.println("Cookie Found...");
+                    System.out.println (headerValue);
+                    cookies.add(headerValue)   ;             
+                }    
+            } 
+        }  
+                
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
 		try (InputStream inputStream = con.getInputStream()) {

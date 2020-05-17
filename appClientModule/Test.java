@@ -4,10 +4,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class Test {
 	
-	public void testConnection (String payLoad) throws IOException {
+	public void testConnection (ArrayList Cookie, String payLoad) throws IOException {
 		String SERVICE_URL = "http://localhost:8081/BookStoreServlet";
 		URL obj = new URL(SERVICE_URL + "/test/test");
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();

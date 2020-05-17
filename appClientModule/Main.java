@@ -110,8 +110,9 @@ public class Main {
 		
 	}
 	
-	public boolean login () throws IOException {
-		ResponseMsgs serverRes = new LoginUI().loginInterface();	
+	public boolean login (){
+		LoginUI login =  new LoginUI();
+		ResponseMsgs serverRes = login.loginInterface();	
 		boolean loginStatus = true;
 		
 		if (serverRes instanceof GeneralServerResponseMsgs) {
@@ -125,15 +126,26 @@ public class Main {
 			 
 			 if (obj.getServerResponseCode().equals("200")) {
 				 loginStatus = false;
-				 new java.util.Timer().schedule( 
-			  				new java.util.TimerTask() {
-			  					@Override
-			  					public void run() {			  						
-			  						//showMainMenu();
-			  					}
-			  				}, 
-			  				5000 
-			  	);
+				 
+				 Test t = new Test ();
+				 
+					try {
+						t.testConnection(login.getCookies(), "Sriyal");
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+					Scanner scn =  new Scanner (System.in);
+					scn.next();
+					
+					try {
+						t.testConnection(login.getCookies(), "Rehansa");
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
+				 
 			 }
 		 }
 		 else {
@@ -150,6 +162,7 @@ public class Main {
 		while (loginStatus) {
 			loginStatus = new Main().login();
 		}
+		/*
 		Test t = new Test ();
 		try {
 			t.testConnection("QWERTY");
@@ -167,14 +180,22 @@ public class Main {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		*/
 	}
-	
-	
-
 	/* (non-Java-doc)
 	 * @see java.lang.Object#Object()
 	 */
-	
-
 }
+
+
+/*
+new java.util.Timer().schedule( 
+	new java.util.TimerTask() {
+		@Override
+		public void run() {			  						
+			//showMainMenu();
+		}
+	}, 
+	5000 
+);
+*/
