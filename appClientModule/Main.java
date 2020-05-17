@@ -13,25 +13,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import Connections.TestConnection;
+import Util.GeneralClientResponseMsgs;
+import Util.GeneralServerResponseMsgs;
+import Util.ResponseMsgs;
 
 //import DBConn.AuthorDBConn;
 
 public class Main {
 	
-	private static Main mainCon;
 	private Scanner scn;
 		
-	private Main () {
-		//scn =  new Scanner (System.in);
-	}
-	
-	public static Main getMainCon () {
-		if (mainCon == null) {
-			mainCon = new Main();
-		}		
-		return mainCon;
-	}
-	
 	public void showMainMenu () {
 				
 		while (true) {
@@ -119,42 +110,63 @@ public class Main {
 		
 	}
 	
-	public void login () throws IOException {
-		LoginUI.getConnection().loginService();
+	public boolean login () throws IOException {
+		ResponseMsgs serverRes = new LoginUI().loginInterface();	
+		boolean loginStatus = true;
 		
-		/*
-		
-		CookieManager cookieManager = new CookieManager();
-		CookieHandler.setDefault(cookieManager);		
-
-		List<HttpCookie> cookies = cookieManager.getCookieStore().getCookies();
-		System.out.println (cookies.isEmpty());
-		
-		URL url = new URL("https://stackoverflow.com");
-
-		URLConnection connection = url.openConnection();
-		connection.getContent();
-		
-		url = new URL("https://www.google.com");
-
-		connection = url.openConnection();
-		connection.getContent();
-		*/
-		/*
-		for (HttpCookie cookie : cookies) {
-			System.out.println ("Iterating Cookies");
-		    System.out.println(cookie.getDomain());
-		    System.out.println(cookie);
-		}
-		System.out.println ("Cookie thing is over");
-		
-		//cookieManager.getCookieStore().removeAll();
-		*/
+		if (serverRes instanceof GeneralServerResponseMsgs) {
+			 GeneralServerResponseMsgs obj = (GeneralServerResponseMsgs) serverRes;
+			 System.out.println ("\n");
+			 System.out.print("\033[H\033[2J");
+			 System.out.flush();
+			 System.out.println (obj.getServerResponseCode());
+			 System.out.println (obj.getMsg());
+			 System.out.println ("\n");
+			 
+			 if (obj.getServerResponseCode().equals("200")) {
+				 loginStatus = false;
+				 new java.util.Timer().schedule( 
+			  				new java.util.TimerTask() {
+			  					@Override
+			  					public void run() {			  						
+			  						//showMainMenu();
+			  					}
+			  				}, 
+			  				5000 
+			  	);
+			 }
+		 }
+		 else {
+			 GeneralClientResponseMsgs obj = (GeneralClientResponseMsgs)serverRes;
+			 System.out.println (obj.getMsg());
+			 System.out.println ("\n");
+			 loginStatus = true;
+		 }
+		return loginStatus;		
 	}
 			
 	public static void main(String[] args) throws IOException {		// TODO Auto-generated method stub
-		Main.getMainCon().login();
-		//Main.getMainCon().showMainMenu();	
+		boolean loginStatus = true;
+		while (loginStatus) {
+			loginStatus = new Main().login();
+		}
+		Test t = new Test ();
+		try {
+			t.testConnection("QWERTY");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		Scanner scn =  new Scanner (System.in);
+		scn.next();
+		
+		try {
+			t.testConnection("ASDFGH");
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 	

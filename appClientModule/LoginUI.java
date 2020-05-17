@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import Connections.LoginConnection;
@@ -13,21 +14,13 @@ import Util.ResponseMsgs;
 
 public class LoginUI {
 
-	private static LoginUI con;
 	private LoginConnection loginCon;
 	private Scanner scn;
+	private ArrayList <String> cookies;
 	
-	private LoginUI () {
-	}
 	
-	public static LoginUI getConnection () {
-		if (con == null) {
-			con =  new LoginUI ();
-		}		
-		return con;
-	}
-	
-	public void loginService () {
+	public ResponseMsgs loginInterface () {
+		cookies = null;
 		String userName = "", passWord = "", reqContentType = "", resContentType = "";
 		byte [] payload = null;
 		byte [] response = null;
@@ -99,8 +92,7 @@ public class LoginUI {
 			try {
 				loginCon = LoginConnection.getConnection();
 				response = loginCon.login(payload, reqContentType,resContentType );	
-				ObjectGeneratorFromPayLoad objFromPayLoad = ObjectGeneratorFromPayLoad.getConnection();
-				
+				ObjectGeneratorFromPayLoad objFromPayLoad = ObjectGeneratorFromPayLoad.getConnection();				
 				
 				if (resContentType.contentEquals("text/plain; charset=utf-8")) {
 					serverRes = (GeneralServerResponseMsgs)objFromPayLoad.getObjectFromText(response);
@@ -112,6 +104,10 @@ public class LoginUI {
 				if (resContentType.contentEquals("application/xml")) {
 					serverRes = (GeneralServerResponseMsgs)objFromPayLoad.getObjectFromXML(response);
 				}
+				
+				if (((GeneralServerResponseMsgs) serverRes).getServerResponseCode().equals("200")) {
+					cookies = loginCon.getCookies();
+				}				
 								
 			}
 			catch (MalformedURLException e) {
@@ -141,13 +137,13 @@ public class LoginUI {
 				new java.util.TimerTask() {
 					@Override
 					public void run() {
-						loginService();
+						loginInterface();
 					}
 				}, 
 				5000 
 			 );
 			
 		}
-		
+		return serverRes;
 	}
 }

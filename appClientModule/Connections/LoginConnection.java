@@ -9,6 +9,7 @@ import java.net.CookieManager;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ public class LoginConnection {
 	
 	private String SERVICE_URL = "http://localhost:8081/BookStoreServlet";	
 	private static LoginConnection singletonCon = null;
+	private ArrayList <String> cookies = null;
 	
 	private LoginConnection ( ) {		
 	}
@@ -32,7 +34,7 @@ public class LoginConnection {
 	}
 	
 	public byte [] login (byte [] requestBody, String reqContentType, String resContentType ) throws IOException, ClassNotFoundException  {
-		
+		cookies = new ArrayList ();
 		URL obj = new URL(SERVICE_URL + "/login");
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		con.setRequestMethod("POST");
@@ -50,60 +52,24 @@ public class LoginConnection {
         Set<String> headerFieldsSet = headerFields.keySet();
         Iterator<String> hearerFieldsIter = headerFieldsSet.iterator();
         
-        System.out.println ("Printing Headers");
-        while (hearerFieldsIter.hasNext()) {
-            
+        while (hearerFieldsIter.hasNext()) {            
             String headerFieldKey = hearerFieldsIter.next();
              
-            if ("Set-Cookie".equalsIgnoreCase(headerFieldKey)) {
-                 
+            if ("Set-Cookie".equalsIgnoreCase(headerFieldKey)) {                 
                 List<String> headerFieldValue = headerFields.get(headerFieldKey);
                  
                 for (String headerValue : headerFieldValue) {
-                     
-                   System.out.println("Cookie Found...");
-                   System.out.println (headerValue);
-                    
+                   System.out.println (headerValue);                    
                    String[] fields = headerValue.split("=",1);
-
-                   String cookieValue = fields[0];
-                   String expires = null;
-                   String path = null;
-                   String domain = null;
-                   boolean secure = false;
-                    
-                   // Parse each field
-                   for (int j = 1; j < fields.length; j++) {
-                       if ("secure".equalsIgnoreCase(fields[j])) {
-                           secure = true;
-                       }
-                       else if (fields[j].indexOf('=') > 0) {
-                           String[] f = fields[j].split("=");
-                           if ("expires".equalsIgnoreCase(f[0])) {
-                               expires = f[1];
-                           }
-                           else if ("domain".equalsIgnoreCase(f[0])) {
-                               domain = f[1];
-                           }
-                           else if ("path".equalsIgnoreCase(f[0])) {
-                               path = f[1];
-                           }
-                       }
-                        
-                   }
-                    
-                   System.out.println("cookieValue:" + cookieValue);
-                   System.out.println("expires:" + expires);
-                   System.out.println("path:" + path);
-                   System.out.println("domain:" + domain);
-                   System.out.println("secure:" + secure);
-                     
-                   System.out.println("*****************************************");  
+                  // System.out.println (fields[0]);
+                   cookies.add(fields[0]);                   
                 }                 
             }        	
 	    }
+        
+        
         CookieManager cookieManager = new CookieManager();
-		CookieHandler.setDefault(cookieManager);		
+		CookieHandler.setDefault(cookieManager);
 
 		List<HttpCookie> cookies = cookieManager.getCookieStore().getCookies();
 		System.out.println (cookies.isEmpty());
@@ -123,8 +89,10 @@ public class LoginConnection {
 		  }
 		}
 		byte[] serverRes = output.toByteArray();		
-		return serverRes;
-		
-		
-  }
+		return serverRes;		
+	}
+	
+	public ArrayList getCookies () {
+		return cookies;
+	}
 }

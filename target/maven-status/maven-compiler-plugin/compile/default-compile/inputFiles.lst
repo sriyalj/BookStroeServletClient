@@ -1,5 +1,14 @@
+/home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/Entity/LoginDetails.java
+/home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/Util/ObjectGeneratorFromPayLoad.java
+/home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/Connections/LoginConnection.java
 /home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/Main.java
 /home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/Connections/AuthorConnections.java
+/home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/Util/GeneralServerResponseMsgs.java
+/home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/Util/RequestPayLoadGenerator.java
 /home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/Connections/Connections.java
+/home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/Connections/TestConnection.java
+/home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/LoginUI.java
 /home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/Entity/Author.java
 /home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/AuthorOperationsUI.java
+/home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/Util/GeneralClientResponseMsgs.java
+/home/sriyal/eclipse-workspace/BookStoreServletClient/appClientModule/Util/ResponseMsgs.java
