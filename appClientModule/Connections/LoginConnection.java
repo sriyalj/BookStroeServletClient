@@ -49,7 +49,7 @@ public class LoginConnection {
 		
 	   	OutputStream os = con.getOutputStream();
 		os.write(requestBody, 0, requestBody.length);
-		
+		/*
 		Map<String, List<String>> headerFields = con.getHeaderFields();		 
         Set<String> headerFieldsSet = headerFields.keySet();
         Iterator<String> hearerFieldsIter = headerFieldsSet.iterator();
@@ -69,7 +69,25 @@ public class LoginConnection {
                 }    
             } 
         }  
-                
+        */
+		System.out.println ("Strinting Cookie Count");
+		Map<String, List<String>> headerFields = con.getHeaderFields();
+		List<String> cookiesHeader = headerFields.get("Set-Cookie");
+		
+		for (String cookie : cookiesHeader) {
+			HttpCookie httpCookie = HttpCookie.parse(cookie).get(0);
+		    String name = httpCookie.getName(); 
+		    String value = httpCookie.getValue();
+		    String domain = httpCookie.getDomain();
+		    
+		    System.out.println (name);
+		    System.out.println (value);
+		    System.out.println (domain);
+		    System.out.println (httpCookie.hasExpired());
+		}
+	      
+		
+		System.out.println ("End Cookie Count");
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
 		try (InputStream inputStream = con.getInputStream()) {

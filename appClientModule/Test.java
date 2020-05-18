@@ -18,6 +18,7 @@ public class Test {
 		con.setDoOutput(true);	
 		con.setConnectTimeout(5000);
         con.setReadTimeout(5000); 
+        //con.add
         
 	    byte arr [] = payLoad.getBytes();
 	   	OutputStream os = con.getOutputStream();
