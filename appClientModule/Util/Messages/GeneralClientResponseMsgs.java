@@ -1,4 +1,4 @@
-package Util;
+package Util.Messages;
 
 public class GeneralClientResponseMsgs extends ResponseMsgs {	
 	

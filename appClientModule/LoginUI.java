@@ -3,14 +3,18 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import Connections.LoginConnection;
-import Entity.LoginDetails;
-import Util.GeneralClientResponseMsgs;
-import Util.GeneralServerResponseMsgs;
-import Util.ObjectGeneratorFromPayLoad;
-import Util.RequestPayLoadGenerator;
-import Util.ResponseMsgs;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import Entity.UserProfile;
+import ServiceCalls.LoginConnection;
+import Util.Messages.GeneralClientResponseMsgs;
+import Util.Messages.GeneralServerResponseMsgs;
+import Util.Messages.ResponseMsgs;
+import Util.PayLoadObjectGenerators.ObjectGeneratorFromPayLoad;
+import Util.PayLoadObjectGenerators.RequestPayLoadGenerator;
 
 public class LoginUI {
 
@@ -18,12 +22,12 @@ public class LoginUI {
 	private Scanner scn;
 	private ArrayList <String> cookies;
 	
-	public ArrayList getCookies () {
+	public ArrayList<String> getCookies () {
 		return cookies;
 	}
 	
 	
-	public ResponseMsgs loginInterface () {
+	public ResponseMsgs login () {
 		cookies = null;
 		String userName = "", passWord = "", reqContentType = "", resContentType = "";
 		byte [] payload = null;
@@ -46,7 +50,7 @@ public class LoginUI {
 			System.out.println ("\nResponse Content Type [text/json/xml] :");
 			resContentType = scn.next();
 		
-			LoginDetails loginObj = new LoginDetails (userName,passWord);
+			UserProfile loginObj = new UserProfile (userName,passWord);
 		
 			RequestPayLoadGenerator payLoadGenCon = RequestPayLoadGenerator.getConnection();			
 		
@@ -70,7 +74,6 @@ public class LoginUI {
 			
 				serverRes = GeneralClientResponseMsgs.getConnection ();
 				serverRes.setMsg("\nWrong Request Type");
-				//return serverRes;				
 			}
 		
 			if (resContentType.equals("text")) {
@@ -90,13 +93,12 @@ public class LoginUI {
 			
 				serverRes = GeneralClientResponseMsgs.getConnection ();
 				serverRes.setMsg("\nWrong Request Type");
-				//return serverRes;			
 			}
 			
 			try {
 				loginCon = LoginConnection.getConnection();
 				response = loginCon.login(payload, reqContentType,resContentType );	
-				ObjectGeneratorFromPayLoad objFromPayLoad = ObjectGeneratorFromPayLoad.getConnection();				
+				ObjectGeneratorFromPayLoad objFromPayLoad = ObjectGeneratorFromPayLoad.getConnection();	
 				
 				if (resContentType.contentEquals("text/plain; charset=utf-8")) {
 					serverRes = (GeneralServerResponseMsgs)objFromPayLoad.getObjectFromText(response);
@@ -109,44 +111,55 @@ public class LoginUI {
 					serverRes = (GeneralServerResponseMsgs)objFromPayLoad.getObjectFromXML(response);
 				}
 				
-				if (((GeneralServerResponseMsgs) serverRes).getServerResponseCode().equals("200")) {
-					cookies = loginCon.getCookies();
-				}				
+				if (serverRes instanceof GeneralServerResponseMsgs) {
+					if (((GeneralServerResponseMsgs) serverRes).getServerResponseCode().equals("200")) {
+						cookies = loginCon.getCookies();
+					}
+				}							
 								
 			}
 			catch (MalformedURLException e) {
 				serverRes = GeneralClientResponseMsgs.getConnection();
 				serverRes.setMsg(e.getMessage());
+				Logger lgr = Logger.getLogger(LoginUI.class.getName());
+	            lgr.log(Level.SEVERE, e.getMessage(), e);
 			}
 			catch (ProtocolException e) {
 				serverRes = GeneralClientResponseMsgs.getConnection ();
 				serverRes.setMsg(e.getMessage());
+				Logger lgr = Logger.getLogger(LoginUI.class.getName());
+	            lgr.log(Level.SEVERE, e.getMessage(), e);
 			}
 			catch (IOException e) {
 				serverRes = GeneralClientResponseMsgs.getConnection ();
-				serverRes.setMsg("\nGeneral Connection Error Occured");
+				serverRes.setMsg("\nConnection Error Occured\n");
+				Logger lgr = Logger.getLogger(LoginUI.class.getName());
+	            lgr.log(Level.SEVERE, e.getMessage(), e);
 			}
 			catch (Exception e) {
-				GeneralClientResponseMsgs.getConnection ();
+				serverRes = GeneralClientResponseMsgs.getConnection ();
 				serverRes.setMsg("\nGeneral Error Occured");
+				Logger lgr = Logger.getLogger(LoginUI.class.getName());
+	            lgr.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
+		catch (JsonProcessingException e) {
+			serverRes = GeneralClientResponseMsgs.getConnection ();
+			serverRes.setMsg(e.getMessage());
+			Logger lgr = Logger.getLogger(LoginUI.class.getName());
+            lgr.log(Level.SEVERE, e.getMessage(), e);
+		}
+		catch (IOException e) {
+			serverRes = GeneralClientResponseMsgs.getConnection ();
+			serverRes.setMsg(e.getMessage());
+			Logger lgr = Logger.getLogger(LoginUI.class.getName());
+            lgr.log(Level.SEVERE, e.getMessage(), e);
+		}		
 		catch (Exception e) {
-			System.out.println ("\n");
-			System.out.print("\033[H\033[2J");
-			System.out.flush();
-			System.out.println ("\n\n Sorry. Something Went Worng");
-			 
-			 new java.util.Timer().schedule( 
-				new java.util.TimerTask() {
-					@Override
-					public void run() {
-						loginInterface();
-					}
-				}, 
-				5000 
-			 );
-			
+			serverRes = GeneralClientResponseMsgs.getConnection ();
+			serverRes.setMsg("\nSorry. Something Went Worng");
+			Logger lgr = Logger.getLogger(LoginUI.class.getName());
+            lgr.log(Level.SEVERE, e.getMessage(), e);			 
 		}
 		return serverRes;
 	}

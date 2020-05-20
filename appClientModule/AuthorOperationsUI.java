@@ -1,16 +1,20 @@
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import Connections.AuthorConnections;
+
 import Entity.Author;
-import Util.GeneralClientResponseMsgs;
-import Util.GeneralServerResponseMsgs;
-import Util.ObjectGeneratorFromPayLoad;
-import Util.RequestPayLoadGenerator;
-import Util.ResponseMsgs;
+import ServiceCalls.AuthorConnections;
+import Util.Messages.GeneralClientResponseMsgs;
+import Util.Messages.GeneralServerResponseMsgs;
+import Util.Messages.ResponseMsgs;
+import Util.PayLoadObjectGenerators.ObjectGeneratorFromPayLoad;
+import Util.PayLoadObjectGenerators.RequestPayLoadGenerator;
 
 
 public class AuthorOperationsUI {
@@ -136,6 +140,7 @@ public class AuthorOperationsUI {
 		  		System.out.print("\033[H\033[2J");
                 System.out.flush();
                 System.out.println ("\nGeneral Error Occured");
+                e.printStackTrace();
 				chk = false;
 				
 				try {
@@ -244,18 +249,33 @@ public class AuthorOperationsUI {
 			catch (MalformedURLException e) {
 				serverRes = GeneralClientResponseMsgs.getConnection();
 				serverRes.setMsg(e.getMessage());
+				Logger lgr = Logger.getLogger(AuthorOperationsUI.class.getName());
+	            lgr.log(Level.SEVERE, e.getMessage(), e);
 			}
 			catch (ProtocolException e) {
 				serverRes = GeneralClientResponseMsgs.getConnection ();
 				serverRes.setMsg(e.getMessage());
+				Logger lgr = Logger.getLogger(AuthorOperationsUI.class.getName());
+	            lgr.log(Level.SEVERE, e.getMessage(), e);
 			}
+			catch (ClassNotFoundException e) {
+				serverRes = GeneralClientResponseMsgs.getConnection ();
+				serverRes.setMsg(e.getMessage());
+				Logger lgr = Logger.getLogger(AuthorOperationsUI.class.getName());
+	            lgr.log(Level.SEVERE, e.getMessage(), e);
+			}			
 			catch (IOException e) {
 				serverRes = GeneralClientResponseMsgs.getConnection ();
-				serverRes.setMsg("\nGeneral Connection Error Occured");
-			}
+				serverRes.setMsg("\nConnection Error Occured." + e.getMessage());
+				Logger lgr = Logger.getLogger(AuthorOperationsUI.class.getName());
+	            lgr.log(Level.SEVERE, e.getMessage(), e);
+			}			
 			catch (Exception e) {
+				e.printStackTrace();
 				GeneralClientResponseMsgs.getConnection ();
-				serverRes.setMsg("\nGeneral Error Occured");
+				serverRes.setMsg("\nGeneral Error Occured." + e.getMessage());
+				Logger lgr = Logger.getLogger(AuthorOperationsUI.class.getName());
+	            lgr.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
 		catch (Exception e) {
@@ -263,6 +283,8 @@ public class AuthorOperationsUI {
 			System.out.print("\033[H\033[2J");
 			System.out.flush();
 			System.out.println ("\n\n Sorry. Something Went Worng");
+			Logger lgr = Logger.getLogger(AuthorOperationsUI.class.getName());
+            lgr.log(Level.SEVERE, e.getMessage(), e);
 			 
 			 new java.util.Timer().schedule( 
 				new java.util.TimerTask() {

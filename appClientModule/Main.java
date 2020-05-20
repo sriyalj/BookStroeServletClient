@@ -12,10 +12,10 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import Connections.TestConnection;
-import Util.GeneralClientResponseMsgs;
-import Util.GeneralServerResponseMsgs;
-import Util.ResponseMsgs;
+import ServiceCalls.TestConnection;
+import Util.Messages.GeneralClientResponseMsgs;
+import Util.Messages.GeneralServerResponseMsgs;
+import Util.Messages.ResponseMsgs;
 
 //import DBConn.AuthorDBConn;
 
@@ -79,7 +79,7 @@ public class Main {
 		  		System.out.print("\033[H\033[2J");
                 System.out.flush();
 				System.out.println ("\nInvalid Input Type. \nYou Need To Enter An Integer From 1,2,3,-1");
-				
+				e.printStackTrace();
 				try {
 					Thread.sleep(3000);        
 				} 
@@ -103,8 +103,7 @@ public class Main {
 							}
 						}, 
 						5000 
-					 );
-				
+					 );				
 			}		
 		}
 		
@@ -112,12 +111,11 @@ public class Main {
 	
 	public boolean login (){
 		LoginUI login =  new LoginUI();
-		ResponseMsgs serverRes = login.loginInterface();	
+		ResponseMsgs serverRes = login.login();	
 		boolean loginStatus = true;
 		
 		if (serverRes instanceof GeneralServerResponseMsgs) {
 			 GeneralServerResponseMsgs obj = (GeneralServerResponseMsgs) serverRes;
-			 System.out.println ("\n");
 			 System.out.print("\033[H\033[2J");
 			 System.out.flush();
 			 System.out.println (obj.getServerResponseCode());
@@ -125,33 +123,20 @@ public class Main {
 			 System.out.println ("\n");
 			 
 			 if (obj.getServerResponseCode().equals("200")) {
-				 loginStatus = false;
-				 
-				 Test t = new Test ();
-				 
-					try {
-						t.testConnection(login.getCookies(), "Sriyal");
-					}
-					catch (Exception e) {
-						e.printStackTrace();
-					}
-					
-					Scanner scn =  new Scanner (System.in);
-					scn.next();
-					
-					try {
-						t.testConnection(login.getCookies(), "Rehansa");
-					}
-					catch (Exception e) {
-						e.printStackTrace();
-					}
-				 
+				 loginStatus = false;				 
+			 }
+			 else {
+				 try {
+					  Thread.sleep(3000);        
+				  } 
+				  catch( InterruptedException ex) {  
+					   Thread.currentThread().interrupt();
+				  }
 			 }
 		 }
 		 else {
 			 GeneralClientResponseMsgs obj = (GeneralClientResponseMsgs)serverRes;
 			 System.out.println (obj.getMsg());
-			 System.out.println ("\n");
 			 loginStatus = true;
 		 }
 		return loginStatus;		
@@ -159,43 +144,27 @@ public class Main {
 			
 	public static void main(String[] args) throws IOException {		// TODO Auto-generated method stub
 		boolean loginStatus = true;
-		while (loginStatus) {
+		int loginAttemptCnt = 0;
+		
+		while (loginStatus) {	
+			
+			if (loginAttemptCnt > 2 ) {
+				System.out.print("\033[H\033[2J");
+				System.out.flush();
+				System.out.println ("\nThere Seems To Be Problem In Trying To Login To The System");
+				System.out.print ("Do You Wish To Continue [True / False] : ");
+				loginStatus = new Scanner (System.in).hasNextBoolean();
+				
+				if (loginStatus == false) {
+					System.exit(0);
+				}
+			}
 			loginStatus = new Main().login();
-		}
-		/*
-		Test t = new Test ();
-		try {
-			t.testConnection("QWERTY");
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		Scanner scn =  new Scanner (System.in);
-		scn.next();
-		
-		try {
-			t.testConnection("ASDFGH");
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		*/
+			loginAttemptCnt++;	
+		} 
+		//new Main().showMainMenu();
 	}
 	/* (non-Java-doc)
 	 * @see java.lang.Object#Object()
 	 */
 }
-
-
-/*
-new java.util.Timer().schedule( 
-	new java.util.TimerTask() {
-		@Override
-		public void run() {			  						
-			//showMainMenu();
-		}
-	}, 
-	5000 
-);
-*/

@@ -1,4 +1,4 @@
-package Connections;
+package ServiceCalls;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -49,45 +49,27 @@ public class LoginConnection {
 		
 	   	OutputStream os = con.getOutputStream();
 		os.write(requestBody, 0, requestBody.length);
-		/*
-		Map<String, List<String>> headerFields = con.getHeaderFields();		 
-        Set<String> headerFieldsSet = headerFields.keySet();
-        Iterator<String> hearerFieldsIter = headerFieldsSet.iterator();
-        
-        while (hearerFieldsIter.hasNext()){	 
-            String headerFieldKey = hearerFieldsIter.next();
- 
-            if ("Set-Cookie".equalsIgnoreCase(headerFieldKey)){
-            	System.out.println (headerFieldKey);            	
- 
-                List<String> headerFieldValue = headerFields.get(headerFieldKey);
- 
-                for (String headerValue : headerFieldValue){
-                    System.out.println("Cookie Found...");
-                    System.out.println (headerValue);
-                    cookies.add(headerValue)   ;             
-                }    
-            } 
-        }  
-        */
-		System.out.println ("Strinting Cookie Count");
+		
 		Map<String, List<String>> headerFields = con.getHeaderFields();
 		List<String> cookiesHeader = headerFields.get("Set-Cookie");
 		
-		for (String cookie : cookiesHeader) {
-			HttpCookie httpCookie = HttpCookie.parse(cookie).get(0);
-		    String name = httpCookie.getName(); 
-		    String value = httpCookie.getValue();
-		    String domain = httpCookie.getDomain();
-		    
-		    System.out.println (name);
-		    System.out.println (value);
-		    System.out.println (domain);
-		    System.out.println (httpCookie.hasExpired());
-		}
-	      
+		if (cookiesHeader != null) {
 		
-		System.out.println ("End Cookie Count");
+			for (String cookie : cookiesHeader) {
+				System.out.println (cookie);
+				HttpCookie httpCookie = HttpCookie.parse(cookie).get(0);
+				//System.out.println (httpCookie);
+				String name = httpCookie.getName(); 
+		    	String value = httpCookie.getValue();
+		    	String domain = httpCookie.getDomain();
+		    	System.out.println (httpCookie);
+		    	System.out.println (name);
+		    	System.out.println (value);
+		    	System.out.println (domain);
+		    	System.out.println (httpCookie.hasExpired());
+			}
+		}
+	   
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
 		try (InputStream inputStream = con.getInputStream()) {
@@ -97,7 +79,7 @@ public class LoginConnection {
 		    output.write(buffer, 0, n);
 		  }
 		}
-		byte[] serverRes = output.toByteArray();		
+		byte[] serverRes = output.toByteArray();
 		return serverRes;		
 	}
 	

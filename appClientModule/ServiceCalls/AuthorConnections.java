@@ -1,4 +1,4 @@
-package Connections;
+package ServiceCalls;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Entity.Author;
-import Util.GeneralServerResponseMsgs;
+import Util.Messages.GeneralServerResponseMsgs;
 
 public class AuthorConnections{
 	

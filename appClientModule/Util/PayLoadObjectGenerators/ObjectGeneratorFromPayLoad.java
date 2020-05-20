@@ -1,4 +1,4 @@
-package Util;
+package Util.PayLoadObjectGenerators;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import Entity.Author;
+import Util.Messages.GeneralServerResponseMsgs;
 
 public class ObjectGeneratorFromPayLoad {
 	
@@ -29,7 +30,7 @@ public class ObjectGeneratorFromPayLoad {
 		return con;
 	}
 	
-	public Object getObjectFromText (byte [] response) throws ClassNotFoundException, IOException  {
+	public Object getObjectFromText (byte [] response) throws ClassNotFoundException ,IOException  {
 		Object reterivedObj = null;
 		
 		ByteArrayInputStream in = new ByteArrayInputStream(response);

@@ -2,16 +2,20 @@ package Entity;
 
 import java.io.Serializable;
 
-public class LoginDetails implements Serializable{
+public class UserProfile implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String userName;
 	private String passWord;
 	
-	public LoginDetails (String userName, String passWord) {
+	public UserProfile (String userName, String passWord) {
 		this.userName = userName;
 		this.passWord = passWord;
 	}
 	
-	public LoginDetails () {
+	public UserProfile () {
 		
 	}
 
