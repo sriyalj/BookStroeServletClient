@@ -49,7 +49,7 @@ public class LoginUI {
 			reqContentType = scn.next();
 			System.out.println ("\nResponse Content Type [text/json/xml] :");
 			resContentType = scn.next();
-		
+			System.out.println ("");
 			UserProfile loginObj = new UserProfile (userName,passWord);
 		
 			RequestPayLoadGenerator payLoadGenCon = RequestPayLoadGenerator.getConnection();			

@@ -9,6 +9,8 @@ import java.util.Base64;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +18,7 @@ import ServiceCalls.TestConnection;
 import Util.Messages.GeneralClientResponseMsgs;
 import Util.Messages.GeneralServerResponseMsgs;
 import Util.Messages.ResponseMsgs;
+import Util.Network.Cookie;
 
 //import DBConn.AuthorDBConn;
 
@@ -163,8 +166,53 @@ public class Main {
 			loginAttemptCnt++;	
 		} 
 		//new Main().showMainMenu();
+		
+		
+		//Cookie c = new Cookie ();
+		//System.out.println (c.getDate());
+		
 	}
 	/* (non-Java-doc)
 	 * @see java.lang.Object#Object()
 	 */
 }
+
+/*
+Timer t = new Timer();
+
+t.scheduleAtFixedRate(
+    new TimerTask()
+    {
+        public void run()
+        {
+            System.out.println("3 seconds passed");
+        }
+    },
+    0,      // run first occurrence immediately
+    3000);  // run every three seconds
+*/
+
+/*
+ public class Test {
+
+    private static class Updater implements Runnable {
+
+        @Override
+        public void run() {
+            System.out.println("3 seconds passed");
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        Runnable r = new Updater();
+        ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+        service.scheduleAtFixedRate(r, 0, 3, TimeUnit.SECONDS);
+
+        Thread.sleep(10000);
+        service.shutdown();
+
+    }
+}
+ * 
+ */
+

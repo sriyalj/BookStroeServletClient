@@ -11,11 +11,18 @@ import java.net.CookieStore;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
+
+import Util.Network.Cookie;
+import Util.Time;
+
 import static java.net.CookiePolicy.ACCEPT_ORIGINAL_SERVER;
 
 
@@ -57,19 +64,12 @@ public class LoginConnection {
 		
 			for (String cookie : cookiesHeader) {
 				System.out.println (cookie);
-				HttpCookie httpCookie = HttpCookie.parse(cookie).get(0);
-				//System.out.println (httpCookie);
-				String name = httpCookie.getName(); 
-		    	String value = httpCookie.getValue();
-		    	String domain = httpCookie.getDomain();
-		    	System.out.println (httpCookie);
-		    	System.out.println (name);
-		    	System.out.println (value);
-		    	System.out.println (domain);
-		    	System.out.println (httpCookie.hasExpired());
+				HttpCookie httpCookie = HttpCookie.parse(cookie).get(0);	    	
 			}
 		}
-	   
+		
+		System.out.println (Time.GetUTCdatetimeAsDate());
+			   
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
 		try (InputStream inputStream = con.getInputStream()) {
