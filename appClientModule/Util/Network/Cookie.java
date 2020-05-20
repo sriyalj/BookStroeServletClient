@@ -40,5 +40,9 @@ public class Cookie {
 		return null;
 	}
 	
+	public void setDomain (String domain) {
+		this.domain = domain;
+	}
+	
 	
 }

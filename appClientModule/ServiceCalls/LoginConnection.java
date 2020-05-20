@@ -4,10 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-import java.net.CookieStore;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -21,6 +17,7 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import Util.Network.Cookie;
+import Util.Network.CookieManager;
 import Util.Time;
 
 import static java.net.CookiePolicy.ACCEPT_ORIGINAL_SERVER;
@@ -68,8 +65,29 @@ public class LoginConnection {
 			}
 		}
 		
-		System.out.println (Time.GetUTCdatetimeAsDate());
-			   
+		//System.out.println (Time.GetUTCdatetimeAsDate());
+		
+		CookieManager cookiemanager = CookieManager.getConnection();
+		Cookie c = new Cookie ("ABC", "DEF");
+		c.setDomain("localhost");
+		cookiemanager.addCookie("/", c, "Hello");
+		
+		c = new Cookie ("QWERTY", "123456");
+		c.setDomain("google.com");
+		cookiemanager.addCookie("/", c, "Hello");		
+		
+		c = new Cookie ("asdfgh", "09876");
+		c.setDomain("facebook.com");
+		cookiemanager.addCookie("/delete", c, "Hello");
+		
+		c = new Cookie ("mnbvcx", "675849");
+		c.setDomain("facebook.com");
+		cookiemanager.addCookie("/delete", c, "Hello");
+		
+		cookiemanager.getCookies("/");
+		cookiemanager.getCookies("/delete");
+		
+		
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
 		try (InputStream inputStream = con.getInputStream()) {
