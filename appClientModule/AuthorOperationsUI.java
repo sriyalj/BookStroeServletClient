@@ -197,13 +197,8 @@ public class AuthorOperationsUI {
 				reqContentType = "application/xml";
 			}
 			else {
-				System.out.println ("\n");
-				System.out.print("\033[H\033[2J");
-				System.out.flush();
-				System.out.println ("\n\n Wrong Request Type Entered");
-				
 				serverRes = GeneralClientResponseMsgs.getConnection ();
-				serverRes.setMsg("\nWrong Request Type");
+				serverRes.setMsg("\nWrong Request Type Entered. Return Type Can Be Text/Json/XML");
 				return serverRes;				
 			}
 			
@@ -217,13 +212,8 @@ public class AuthorOperationsUI {
 				resContentType = "application/xml";
 			} 
 			else {
-				System.out.println ("\n");
-				System.out.print("\033[H\033[2J");
-				System.out.flush();
-				System.out.println ("\n\n Wrong Request Type Entered");
-				
 				serverRes = GeneralClientResponseMsgs.getConnection ();
-				serverRes.setMsg("\nWrong Request Type");
+				serverRes.setMsg("\nWrong Request Type Entered. Return Type Can Be Text/Json/XML");
 				return serverRes;
 				
 			}

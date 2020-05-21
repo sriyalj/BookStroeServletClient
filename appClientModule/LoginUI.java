@@ -54,45 +54,37 @@ public class LoginUI {
 		
 			RequestPayLoadGenerator payLoadGenCon = RequestPayLoadGenerator.getConnection();			
 		
-			if (reqContentType.equals("text")) {
+			if (reqContentType.equalsIgnoreCase("text")) {
 				payload = payLoadGenCon.textPayLoadGenerator(loginObj);
 				reqContentType = reqContentType +"/plain; charset=utf-8";
 			}
-			else if (reqContentType.equals("json")) {
+			else if (reqContentType.equalsIgnoreCase("json")) {
 				payload = payLoadGenCon.jsonPayLoadGenerator(loginObj);
 				reqContentType = "application/json; utf-8";
 			} 
-			else if (reqContentType.equals("xml")) {
+			else if (reqContentType.equalsIgnoreCase("xml")) {
 				payload = payLoadGenCon.xmlPayLoadGenerator(loginObj);
 				reqContentType = "application/xml";
 			}
-			else {
-				System.out.println ("\n");
-				System.out.print("\033[H\033[2J");
-				System.out.flush();
-				System.out.println ("\n\n Wrong Request Type Entered");
-			
+			else {						
 				serverRes = GeneralClientResponseMsgs.getConnection ();
-				serverRes.setMsg("\nWrong Request Type");
+				serverRes.setMsg("\nWrong Request Type Entered. Return Type Can Be Text/Json/XML");
+				return serverRes;
 			}
 		
-			if (resContentType.equals("text")) {
+			if (resContentType.equalsIgnoreCase("text")) {
 				resContentType = resContentType +"/plain; charset=utf-8";
 			}
-			else if (resContentType.equals("json")) {
+			else if (resContentType.equalsIgnoreCase("json")) {
 				resContentType = "application/json; utf-8";
 			} 
-			else if (resContentType.equals("xml")) {
+			else if (resContentType.equalsIgnoreCase("xml")) {
 				resContentType = "application/xml";
 			} 
-			else {
-				System.out.println ("\n");
-				System.out.print("\033[H\033[2J");
-				System.out.flush();
-				System.out.println ("\n\n Wrong Request Type Entered");
-			
+			else {			
 				serverRes = GeneralClientResponseMsgs.getConnection ();
-				serverRes.setMsg("\nWrong Request Type");
+				serverRes.setMsg("\nWrong Request Type Entered. Return Type Can Be Text/Json/XML");
+				return serverRes;
 			}
 			
 			try {
@@ -109,13 +101,7 @@ public class LoginUI {
 				}
 				if (resContentType.contentEquals("application/xml")) {
 					serverRes = (GeneralServerResponseMsgs)objFromPayLoad.getObjectFromXML(response);
-				}
-				
-				if (serverRes instanceof GeneralServerResponseMsgs) {
-					if (((GeneralServerResponseMsgs) serverRes).getServerResponseCode().equals("200")) {
-						cookies = loginCon.getCookies();
-					}
-				}							
+				}									
 								
 			}
 			catch (MalformedURLException e) {

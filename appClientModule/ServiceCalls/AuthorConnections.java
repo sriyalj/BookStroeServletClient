@@ -19,6 +19,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import Entity.Author;
 import Util.Messages.GeneralServerResponseMsgs;
 
+import Util.Network.CookieManager;
+
 public class AuthorConnections{
 	
 	private String SERVICE_URL = "http://localhost:8081/BookStoreServlet";	
@@ -45,6 +47,8 @@ public class AuthorConnections{
 		con.setDoOutput(true);	
 		con.setConnectTimeout(5000);
         con.setReadTimeout(5000); 
+        
+        //CookieManager.
         
 		
 	   	OutputStream os = con.getOutputStream();

@@ -128,19 +128,29 @@ public class Main {
 			 if (obj.getServerResponseCode().equals("200")) {
 				 loginStatus = false;				 
 			 }
-			 else {
-				 try {
-					  Thread.sleep(3000);        
-				  } 
-				  catch( InterruptedException ex) {  
-					   Thread.currentThread().interrupt();
-				  }
-			 }
+			 
+			try {
+				Thread.sleep(3000);        
+			} 
+			catch( InterruptedException ex) {  
+				Thread.currentThread().interrupt();
+			}
+			 
 		 }
 		 else {
 			 GeneralClientResponseMsgs obj = (GeneralClientResponseMsgs)serverRes;
+			 System.out.print("\033[H\033[2J");
+			 System.out.flush();
 			 System.out.println (obj.getMsg());
+			 System.out.println ("\n");
 			 loginStatus = true;
+			 try {
+				  Thread.sleep(3000);        
+			  } 
+			  catch( InterruptedException ex) {  
+				   Thread.currentThread().interrupt();
+			  }
+			 
 		 }
 		return loginStatus;		
 	}
@@ -164,13 +174,9 @@ public class Main {
 			}
 			loginStatus = new Main().login();
 			loginAttemptCnt++;	
-		} 
-		//new Main().showMainMenu();
+		}	
 		
-		
-		//Cookie c = new Cookie ();
-		//System.out.println (c.getDate());
-		
+		new Main().showMainMenu();
 	}
 	/* (non-Java-doc)
 	 * @see java.lang.Object#Object()
