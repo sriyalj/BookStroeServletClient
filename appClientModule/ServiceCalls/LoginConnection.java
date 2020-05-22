@@ -7,12 +7,15 @@ import java.io.OutputStream;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import Util.DateTime;
 import Util.Network.CookieManager;
-
-
 
 public class LoginConnection {
 	
@@ -29,7 +32,7 @@ public class LoginConnection {
 		return singletonCon;
 	}
 	
-	public byte [] login (byte [] requestBody, String reqContentType, String resContentType ) throws IOException, ClassNotFoundException  {
+	public byte [] login (byte [] requestBody, String reqContentType, String resContentType ) throws IOException, ClassNotFoundException {
 		
 		URL obj = new URL(SERVICE_URL + "/login");
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -45,20 +48,23 @@ public class LoginConnection {
 		
 		Map<String, List<String>> headerFields = con.getHeaderFields();
 		List<String> cookiesHeader = headerFields.get("Set-Cookie");
-		
+		String time = null;
+		String path = null;
 		if (cookiesHeader != null) {
 			CookieManager cookiemanager = CookieManager.getConnection();
 			for (String cookie : cookiesHeader) {
 				HttpCookie httpCookie = HttpCookie.parse(cookie).get(0);
 				String cookieValPairs [] = cookie.split(";");
-				String time = null;
+				time = null;
 				for (String valPair : cookieValPairs) {
 					valPair = valPair.trim();
 					if (valPair.startsWith("Expires")){
 						time = valPair.split(",",0)[1].trim();
+						time = (time.replace ("GMT", "")).trim();
+						//System.out.println ("Cookie Valid Time " + time);
 					}
 				}
-				String path = httpCookie.getPath()!=null ? httpCookie.getPath() : "/";
+				path = httpCookie.getPath()!=null ? httpCookie.getPath() : "/";
 				if (time == null) {
 					time = "Session";
 				}

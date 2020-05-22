@@ -155,7 +155,7 @@ public class Main {
 		return loginStatus;		
 	}
 			
-	public static void main(String[] args) throws IOException {		// TODO Auto-generated method stub
+	public static void main(String[] args)  {		// TODO Auto-generated method stub
 		boolean loginStatus = true;
 		int loginAttemptCnt = 0;
 		

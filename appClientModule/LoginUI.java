@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import Entity.UserProfile;
+import PersistentObjects.PersistentObjectList;
 import ServiceCalls.LoginConnection;
 import Util.Messages.GeneralClientResponseMsgs;
 import Util.Messages.GeneralServerResponseMsgs;
@@ -50,7 +51,8 @@ public class LoginUI {
 			System.out.println ("\nResponse Content Type [text/json/xml] :");
 			resContentType = scn.next();
 			System.out.println ("");
-			UserProfile loginObj = new UserProfile (userName,passWord);
+			UserProfile loginObj = new UserProfile (userName,passWord); 
+			
 		
 			RequestPayLoadGenerator payLoadGenCon = RequestPayLoadGenerator.getConnection();			
 		
@@ -101,7 +103,9 @@ public class LoginUI {
 				}
 				if (resContentType.contentEquals("application/xml")) {
 					serverRes = (GeneralServerResponseMsgs)objFromPayLoad.getObjectFromXML(response);
-				}									
+				}	
+				PersistentObjectList persistentObjList = PersistentObjectList.getConnection ();
+				persistentObjList.setUserProfile(loginObj);
 								
 			}
 			catch (MalformedURLException e) {

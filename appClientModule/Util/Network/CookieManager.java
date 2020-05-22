@@ -1,11 +1,17 @@
 package Util.Network;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import Util.DateTime;
+
 import java.net.HttpCookie;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class CookieManager {
 	
@@ -19,11 +25,9 @@ public class CookieManager {
 	public static CookieManager getConnection () {
 		if (con == null) {
 			con = new CookieManager();
-		}
-		
+		}		
 		return con;
-	}
-	
+	}	
 	
 	public void addCookie (String path, HttpCookie c, String time) {
 		if (cookieStore.containsKey(path)) {			
@@ -44,44 +48,69 @@ public class CookieManager {
 			store.put(time, cookies);
 			cookieStore.put(path, store);
 		}
-		
-		//getAllCookies();
 	}
 	
-	public void getCookiesAllByPath (String path) {
+	public ArrayList <HttpCookie> getAllCookiesForPath (String path) {
 		ArrayList <HttpCookie> cookieList = new ArrayList ();
 		HashMap store = cookieStore.get(path);		
-		System.out.println("PAth = " + path);		
-		Iterator<Map.Entry<String, ArrayList>> entries = store.entrySet().iterator();
-		
+		Iterator<Map.Entry<String, ArrayList>> entries = store.entrySet().iterator();		
 		
 		while (entries.hasNext()) {
 		    Map.Entry<String, ArrayList> entry = entries.next();
-		    System.out.println("Key = " + entry.getKey());
 		    ArrayList <HttpCookie >cookies = entry.getValue();
 		    
 		    for (HttpCookie c : cookies) {
-		    	System.out.println (c.getName() + " " +  c.getValue());
-		    	System.out.println (c.getMaxAge());
-		    	
+		    	cookieList.add(c);		    	
 		    }
-		    System.out.println (" ");
-		}
+		}		
+		return cookieList;
 	}
 	
-	public void getAllValidCookiesForPath (String path) {
+	public ArrayList <HttpCookie> getAllValidCookiesForPath (String path) throws ParseException {
 		
+		ArrayList <HttpCookie> cookieList = new ArrayList ();
+		HashMap store = cookieStore.get(path);		
+		Iterator<Map.Entry<String, ArrayList>> entries = store.entrySet().iterator();		
+		
+		while (entries.hasNext()) {
+		    Map.Entry<String, ArrayList> entry = entries.next();
+		    String time = entry.getKey();
+		    
+		    if (time.equals("Session")) {
+		    	ArrayList <HttpCookie >cookies = entry.getValue();
+			    
+			    for (HttpCookie c : cookies) {
+			    	cookieList.add(c);		    	
+			    }
+		    }
+		    else {		    
+		    	Date currentDateTime = DateTime.getUTCdatetimeAsDate();
+		    	SimpleDateFormat dateFormatter =new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss");
+		    	Date cookieTime = dateFormatter.parse(time);
+		    
+		    	long diff = (cookieTime.getTime()-currentDateTime.getTime())/1000;
+		    
+		    	if (diff > 0) {
+		    		ArrayList <HttpCookie >cookies = entry.getValue();
+			    
+		    		for (HttpCookie c : cookies) {
+		    			cookieList.add(c);		    	
+		    		}		    	
+		    	}	
+		    }
+		}		
+		return cookieList; 
 	}
 	
-	public void getAllCookies () {
+	public void printAllCookies () {
 		
 		for ( Entry<String, HashMap<String, ArrayList<HttpCookie>>> manager: cookieStore.entrySet()) {
-			//System.out.println ("Path is " + manager.getKey());
+			System.out.println ("Path is " + manager.getKey());
 			
 			HashMap<String, ArrayList<HttpCookie>> stores = manager.getValue();
 			
 			for (Entry<String, ArrayList<HttpCookie>> store : stores.entrySet()) {
-					//System.out.println ("Expiry Date " + store.getKey());
+					System.out.println ("Expiry Date " + store.getKey());
 					
 					ArrayList <HttpCookie> cookiesList = store.getValue();
 					
@@ -89,7 +118,7 @@ public class CookieManager {
 						System.out.println (c.getName() + " " +  c.getValue());
 					}				
 			}
-			//System.out.println ("\n");
+			System.out.println ("\n");
 		}	
 	}
 	

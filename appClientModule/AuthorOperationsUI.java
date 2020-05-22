@@ -1,18 +1,25 @@
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.HttpCookie;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import Entity.Author;
+import PersistentObjects.PersistentObjectList;
 import ServiceCalls.AuthorConnections;
+import ServiceCalls.LoginConnection;
 import Util.Messages.GeneralClientResponseMsgs;
 import Util.Messages.GeneralServerResponseMsgs;
 import Util.Messages.ResponseMsgs;
+import Util.Network.CookieManager;
 import Util.PayLoadObjectGenerators.ObjectGeneratorFromPayLoad;
 import Util.PayLoadObjectGenerators.RequestPayLoadGenerator;
 
@@ -217,6 +224,18 @@ public class AuthorOperationsUI {
 				return serverRes;
 				
 			}
+			boolean authCheck = true;
+			int authCheckCnt = 0;
+			while (authCheck) {
+				authCheck = !(getAuthenticated ("/"));
+				authCheckCnt++;
+				
+				if (authCheckCnt > 3) {
+					serverRes = GeneralClientResponseMsgs.getConnection ();
+					serverRes.setMsg("\nThere Was A Problem In Authenticating. Please Try Again Later");
+					return serverRes;
+				}
+			}
 			
 			try {
 				AuthorCon = AuthorConnections.getConnection();
@@ -259,7 +278,13 @@ public class AuthorOperationsUI {
 				serverRes.setMsg("\nConnection Error Occured." + e.getMessage());
 				Logger lgr = Logger.getLogger(AuthorOperationsUI.class.getName());
 	            lgr.log(Level.SEVERE, e.getMessage(), e);
-			}			
+			}	
+			catch (ParseException e) {
+				serverRes = GeneralClientResponseMsgs.getConnection ();
+				serverRes.setMsg(e.getMessage());
+				Logger lgr = Logger.getLogger(AuthorOperationsUI.class.getName());
+	            lgr.log(Level.SEVERE, e.getMessage(), e);
+			}
 			catch (Exception e) {
 				e.printStackTrace();
 				GeneralClientResponseMsgs.getConnection ();
@@ -268,24 +293,23 @@ public class AuthorOperationsUI {
 	            lgr.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
-		catch (Exception e) {
-			System.out.println ("\n");
-			System.out.print("\033[H\033[2J");
-			System.out.flush();
-			System.out.println ("\n\n Sorry. Something Went Worng");
-			Logger lgr = Logger.getLogger(AuthorOperationsUI.class.getName());
+		catch (JsonProcessingException e) {
+			serverRes = GeneralClientResponseMsgs.getConnection ();
+			serverRes.setMsg(e.getMessage());
+			Logger lgr = Logger.getLogger(LoginUI.class.getName());
             lgr.log(Level.SEVERE, e.getMessage(), e);
-			 
-			 new java.util.Timer().schedule( 
-				new java.util.TimerTask() {
-					@Override
-					public void run() {
-						showAuthorOperations();
-					}
-				}, 
-				5000 
-			 );
-			
+		}
+		catch (IOException e) {
+			serverRes = GeneralClientResponseMsgs.getConnection ();
+			serverRes.setMsg(e.getMessage());
+			Logger lgr = Logger.getLogger(LoginUI.class.getName());
+            lgr.log(Level.SEVERE, e.getMessage(), e);
+		}		
+		catch (Exception e) {
+			serverRes = GeneralClientResponseMsgs.getConnection ();
+			serverRes.setMsg("\nSorry. Something Went Worng");
+			Logger lgr = Logger.getLogger(LoginUI.class.getName());
+            lgr.log(Level.SEVERE, e.getMessage(), e);			 
 		}
 	  return serverRes;
 	}
@@ -293,5 +317,38 @@ public class AuthorOperationsUI {
 	String viewAuthorDetailsByFirstName (String fstName) {
 		return null;
 	}
+	
+	private boolean getAuthenticated (String path)  {
+		try {
+			ArrayList <HttpCookie> cookieList = CookieManager.getConnection().getAllValidCookiesForPath(path);
+			
+			if (cookieList.isEmpty()) {	
+				
+				PersistentObjectList persistentObjList = PersistentObjectList.getConnection ();
+				RequestPayLoadGenerator payLoadGenCon = RequestPayLoadGenerator.getConnection();
+				
+				byte payload [] = payLoadGenCon.textPayLoadGenerator(persistentObjList.getUserProfile());
+				
+				LoginConnection loginCon = LoginConnection.getConnection();	
+				byte [] response = loginCon.login(payload, "text/plain; charset=utf-8", "text/plain; charset=utf-8");
+				ObjectGeneratorFromPayLoad objFromPayLoad = ObjectGeneratorFromPayLoad.getConnection();
+				GeneralServerResponseMsgs serverRes = (GeneralServerResponseMsgs)objFromPayLoad.getObjectFromText(response);
+					
+				if (serverRes.getServerResponseCode().equals("200")) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+			else {				
+				return true;
+			}
+		}
+		catch (Exception e) {
+			return false;
+		}	
+	}
+	  
 
 }
