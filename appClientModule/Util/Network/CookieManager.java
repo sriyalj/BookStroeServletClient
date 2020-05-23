@@ -29,46 +29,53 @@ public class CookieManager {
 		return con;
 	}	
 	
-	public void addCookie (String path, HttpCookie c, String time) {
+	public void addCookie (String path, HttpCookie cookie, String time) {
+		
+		if (cookie.getMaxAge() < 0) {
+			path = cookie.getPath()!=null ? cookie.getPath() : "/";
+			System.out.println ("Found Cookie To Delete");
+			deleteCookie(path, cookie);
+		}
 		if (cookieStore.containsKey(path)) {			
 			HashMap store = cookieStore.get(path);
-			ArrayList <HttpCookie> cookies = (ArrayList<HttpCookie>) store.get(time);
+			ArrayList <HttpCookie> cookiesListForPath = (ArrayList<HttpCookie>) store.get(time);
 			
-			if (cookies == null) {
-				cookies = new ArrayList();
+			if (cookiesListForPath == null) {
+				cookiesListForPath = new ArrayList();
 			}
-			cookies.add(c);
-			store.put(time, cookies);
+			cookiesListForPath.add(cookie);
+			store.put(time, cookiesListForPath);
 			cookieStore.put(path, store);			
 		}
 		else {
 			HashMap store = new HashMap () ;
-			ArrayList <HttpCookie> cookies = new ArrayList();
-			cookies.add(c);
-			store.put(time, cookies);
+			ArrayList <HttpCookie> cookiesListForPath = new ArrayList();
+			cookiesListForPath.add(cookie);
+			store.put(time, cookiesListForPath);
 			cookieStore.put(path, store);
 		}
 	}
 	
 	public ArrayList <HttpCookie> getAllCookiesForPath (String path) {
-		ArrayList <HttpCookie> cookieList = new ArrayList ();
+		ArrayList <HttpCookie> allCookieList = new ArrayList ();
+		
 		HashMap store = cookieStore.get(path);		
 		Iterator<Map.Entry<String, ArrayList>> entries = store.entrySet().iterator();		
 		
 		while (entries.hasNext()) {
 		    Map.Entry<String, ArrayList> entry = entries.next();
-		    ArrayList <HttpCookie >cookies = entry.getValue();
+		    ArrayList <HttpCookie >cookiesList = entry.getValue();
 		    
-		    for (HttpCookie c : cookies) {
-		    	cookieList.add(c);		    	
+		    for (HttpCookie cookie : cookiesList) {
+		    	allCookieList.add(cookie);		    	
 		    }
 		}		
-		return cookieList;
+		return allCookieList;
 	}
 	
 	public ArrayList <HttpCookie> getAllValidCookiesForPath (String path) throws ParseException {
 		
-		ArrayList <HttpCookie> cookieList = new ArrayList ();
+		ArrayList <HttpCookie> allValidCookieList = new ArrayList ();
 		HashMap store = cookieStore.get(path);		
 		Iterator<Map.Entry<String, ArrayList>> entries = store.entrySet().iterator();		
 		
@@ -77,10 +84,10 @@ public class CookieManager {
 		    String time = entry.getKey();
 		    
 		    if (time.equals("Session")) {
-		    	ArrayList <HttpCookie >cookies = entry.getValue();
+		    	ArrayList <HttpCookie >cookiesList = entry.getValue();
 			    
-			    for (HttpCookie c : cookies) {
-			    	cookieList.add(c);		    	
+			    for (HttpCookie cookie : cookiesList) {
+			    	allValidCookieList.add(cookie);		    	
 			    }
 		    }
 		    else {		    
@@ -91,39 +98,75 @@ public class CookieManager {
 		    	long diff = (cookieTime.getTime()-currentDateTime.getTime())/1000;
 		    
 		    	if (diff > 0) {
-		    		ArrayList <HttpCookie >cookies = entry.getValue();
+		    		ArrayList <HttpCookie >cookiesList = entry.getValue();
 			    
-		    		for (HttpCookie c : cookies) {
-		    			cookieList.add(c);		    	
+		    		for (HttpCookie cookie : cookiesList) {
+		    			allValidCookieList.add(cookie);		    	
 		    		}		    	
-		    	}	
+		    	}
+		    	else {
+		    		deleteAllCookiesForPath(path, time);
+		    	}
 		    }
 		}		
-		return cookieList; 
+		return allValidCookieList; 
 	}
 	
 	public void printAllCookies () {
 		
 		for ( Entry<String, HashMap<String, ArrayList<HttpCookie>>> manager: cookieStore.entrySet()) {
-			System.out.println ("Path is " + manager.getKey());
-			
+						
 			HashMap<String, ArrayList<HttpCookie>> stores = manager.getValue();
-			
+			System.out.println ("\nPrinting Cookie");
 			for (Entry<String, ArrayList<HttpCookie>> store : stores.entrySet()) {
 					System.out.println ("Expiry Date " + store.getKey());
 					
 					ArrayList <HttpCookie> cookiesList = store.getValue();
 					
-					for (HttpCookie c : cookiesList) {
-						System.out.println (c.getName() + " " +  c.getValue());
+					for (HttpCookie cookie : cookiesList) {
+						System.out.println (cookie.getName() + " " +  cookie.getValue());
 					}				
 			}
 			System.out.println ("\n");
 		}	
 	}
 	
-	public void deleteCookie (String path, HttpCookie cookie) {
+	public void deleteCookie (String path, HttpCookie delCookie) {
 		
+		String receivedCookieName = delCookie.getName();
+		String receivedCookieValue = delCookie.getValue();
+		
+		HashMap<String, ArrayList<HttpCookie>> store = cookieStore.get(path);
+		
+		if (store != null) {
+			Iterator<Entry<String, ArrayList<HttpCookie>>> entries = store.entrySet().iterator();		
+		
+			while (entries.hasNext()) {
+				Entry<String, ArrayList<HttpCookie>> entry = entries.next();
+				String time = entry.getKey();	
+		    
+				ArrayList <HttpCookie> cookiesList = entry.getValue();
+		    
+				for (HttpCookie cookie : cookiesList) {
+					if ((receivedCookieName.equals(cookie.getName())) && (receivedCookieValue.equals(cookie.getValue()))) {
+						System.out.println (receivedCookieName + " " + cookie.getName());
+						System.out.println (receivedCookieValue + " " + cookie.getValue());
+						cookiesList.remove(cookie);
+					}
+				}		    
+				store.put(time, cookiesList);
+			}
+		}
 	}
-
+	
+	private void deleteAllCookiesForPath (String path, String timeStamp) {
+		
+		HashMap <String, ArrayList<HttpCookie>> store = cookieStore.get(path);
+		
+		if (store != null) {
+			if (store.containsKey(timeStamp)) {
+				store.remove(timeStamp);
+			}
+		}		
+	}
 }
