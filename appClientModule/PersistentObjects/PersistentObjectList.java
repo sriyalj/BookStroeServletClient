@@ -1,11 +1,11 @@
 package PersistentObjects;
 
-import Entity.UserProfile;
+import Entity.AutheticationData;
 
 public class PersistentObjectList {
 	
 	private static PersistentObjectList con;
-	private UserProfile UP;
+	private AutheticationData UP;
 	
 	private PersistentObjectList () {
 		
@@ -18,11 +18,11 @@ public class PersistentObjectList {
 		return con;
 	}
 
-	public UserProfile getUserProfile() {
+	public AutheticationData getUserProfile() {
 		return UP;
 	}
 
-	public void setUserProfile(UserProfile uP) {
+	public void setUserProfile(AutheticationData uP) {
 		UP = uP;
 	}
 	

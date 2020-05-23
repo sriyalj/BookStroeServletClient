@@ -122,7 +122,7 @@ public class CookieManager {
 		}	
 	}
 	
-	public void deleteCookie () {
+	public void deleteCookie (String path, HttpCookie cookie) {
 		
 	}
 

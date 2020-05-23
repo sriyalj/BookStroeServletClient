@@ -1,13 +1,5 @@
-import java.io.IOException;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.HttpCookie;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Base64;
+
 import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -18,7 +10,6 @@ import ServiceCalls.TestConnection;
 import Util.Messages.GeneralClientResponseMsgs;
 import Util.Messages.GeneralServerResponseMsgs;
 import Util.Messages.ResponseMsgs;
-import Util.Network.Cookie;
 
 //import DBConn.AuthorDBConn;
 
@@ -129,12 +120,12 @@ public class Main {
 				 loginStatus = false;				 
 			 }
 			 
-			try {
+			 try {
 				Thread.sleep(3000);        
-			} 
-			catch( InterruptedException ex) {  
+			 } 
+			 catch( InterruptedException ex) {  
 				Thread.currentThread().interrupt();
-			}
+			 }
 			 
 		 }
 		 else {

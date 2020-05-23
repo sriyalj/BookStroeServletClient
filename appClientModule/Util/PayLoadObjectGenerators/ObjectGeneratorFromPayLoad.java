@@ -2,15 +2,11 @@ package Util.PayLoadObjectGenerators;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
-
-import javax.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
-import Entity.Author;
 import Util.Messages.GeneralServerResponseMsgs;
 
 public class ObjectGeneratorFromPayLoad {

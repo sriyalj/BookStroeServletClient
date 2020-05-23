@@ -8,7 +8,8 @@ import java.util.logging.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import Entity.UserProfile;
+import Entity.AutheticationData;
+import Exceptions.WrongRequestTypeException;
 import PersistentObjects.PersistentObjectList;
 import ServiceCalls.LoginConnection;
 import Util.Messages.GeneralClientResponseMsgs;
@@ -51,7 +52,7 @@ public class LoginUI {
 			System.out.println ("\nResponse Content Type [text/json/xml] :");
 			resContentType = scn.next();
 			System.out.println ("");
-			UserProfile loginObj = new UserProfile (userName,passWord); 
+			AutheticationData loginObj = new AutheticationData (userName,passWord); 
 			
 		
 			RequestPayLoadGenerator payLoadGenCon = RequestPayLoadGenerator.getConnection();			
@@ -69,9 +70,7 @@ public class LoginUI {
 				reqContentType = "application/xml";
 			}
 			else {						
-				serverRes = GeneralClientResponseMsgs.getConnection ();
-				serverRes.setMsg("\nWrong Request Type Entered. Return Type Can Be Text/Json/XML");
-				return serverRes;
+				throw new WrongRequestTypeException("\nWrong Request Type Entered. Return Type Can Be Text/Json/XML");
 			}
 		
 			if (resContentType.equalsIgnoreCase("text")) {
@@ -83,10 +82,8 @@ public class LoginUI {
 			else if (resContentType.equalsIgnoreCase("xml")) {
 				resContentType = "application/xml";
 			} 
-			else {			
-				serverRes = GeneralClientResponseMsgs.getConnection ();
-				serverRes.setMsg("\nWrong Request Type Entered. Return Type Can Be Text/Json/XML");
-				return serverRes;
+			else {	
+				throw new WrongRequestTypeException("\nWrong Request Type Entered. Return Type Can Be Text/Json/XML");
 			}
 			
 			try {
@@ -132,6 +129,12 @@ public class LoginUI {
 				Logger lgr = Logger.getLogger(LoginUI.class.getName());
 	            lgr.log(Level.SEVERE, e.getMessage(), e);
 			}
+		}
+		catch (WrongRequestTypeException e) {
+			serverRes = GeneralClientResponseMsgs.getConnection ();
+			serverRes.setMsg(e.getMessage());
+			Logger lgr = Logger.getLogger(LoginUI.class.getName());
+            lgr.log(Level.SEVERE, e.getMessage(), e);
 		}
 		catch (JsonProcessingException e) {
 			serverRes = GeneralClientResponseMsgs.getConnection ();

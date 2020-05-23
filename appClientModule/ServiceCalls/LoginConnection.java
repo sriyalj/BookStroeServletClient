@@ -7,14 +7,9 @@ import java.io.OutputStream;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import Util.DateTime;
 import Util.Network.CookieManager;
 
 public class LoginConnection {
@@ -53,7 +48,13 @@ public class LoginConnection {
 		if (cookiesHeader != null) {
 			CookieManager cookiemanager = CookieManager.getConnection();
 			for (String cookie : cookiesHeader) {
+				System.out.println (cookie);
 				HttpCookie httpCookie = HttpCookie.parse(cookie).get(0);
+				
+				if (httpCookie.getMaxAge() < 0) {
+					path = httpCookie.getPath()!=null ? httpCookie.getPath() : "/";
+					cookiemanager.deleteCookie(path, httpCookie);
+				}
 				String cookieValPairs [] = cookie.split(";");
 				time = null;
 				for (String valPair : cookieValPairs) {

@@ -2,7 +2,7 @@ package Entity;
 
 import java.io.Serializable;
 
-public class UserProfile implements Serializable{
+public class AutheticationData implements Serializable{
 	/**
 	 * 
 	 */
@@ -10,12 +10,12 @@ public class UserProfile implements Serializable{
 	private String userName;
 	private String passWord;
 	
-	public UserProfile (String userName, String passWord) {
+	public AutheticationData (String userName, String passWord) {
 		this.userName = userName;
 		this.passWord = passWord;
 	}
 	
-	public UserProfile () {
+	public AutheticationData () {
 		
 	}
 
