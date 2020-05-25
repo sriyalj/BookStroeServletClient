@@ -31,10 +31,17 @@ public class CookieManager {
 	
 	public void addCookie (String path, HttpCookie cookie, String time) {
 		
-		if (cookie.getMaxAge() < 0) {
+		System.out.print(cookie.getMaxAge());
+		
+		if (cookie.getMaxAge() == 0) {
 			path = cookie.getPath()!=null ? cookie.getPath() : "/";
 			System.out.println ("Found Cookie To Delete");
 			deleteCookie(path, cookie);
+			return;
+		}
+		
+		if (cookie.getMaxAge() <0 ) {
+			time = "Session";
 		}
 		if (cookieStore.containsKey(path)) {			
 			HashMap store = cookieStore.get(path);
@@ -76,7 +83,11 @@ public class CookieManager {
 	public ArrayList <HttpCookie> getAllValidCookiesForPath (String path) throws ParseException {
 		
 		ArrayList <HttpCookie> allValidCookieList = new ArrayList ();
-		HashMap store = cookieStore.get(path);		
+		HashMap store = cookieStore.get(path);
+		
+		if (store == null) {
+			return allValidCookieList;
+		}
 		Iterator<Map.Entry<String, ArrayList>> entries = store.entrySet().iterator();		
 		
 		while (entries.hasNext()) {
@@ -113,11 +124,11 @@ public class CookieManager {
 	}
 	
 	public void printAllCookies () {
-		
+		System.out.println ("\n Printing All Cookies");
 		for ( Entry<String, HashMap<String, ArrayList<HttpCookie>>> manager: cookieStore.entrySet()) {
 						
 			HashMap<String, ArrayList<HttpCookie>> stores = manager.getValue();
-			System.out.println ("\nPrinting Cookie");
+			
 			for (Entry<String, ArrayList<HttpCookie>> store : stores.entrySet()) {
 					System.out.println ("Expiry Date " + store.getKey());
 					

@@ -33,8 +33,7 @@ public class AuthorConnections{
 			singletonCon = new AuthorConnections ();
 		}		
 		return singletonCon;
-	}
-		
+	}		
 		
 	public byte [] addNewAuthor (byte [] requestBody, String reqContentType, String resContentType ) throws IOException, ClassNotFoundException, ParseException, AuthenticationFailException  {
 				       
@@ -57,18 +56,15 @@ public class AuthorConnections{
 				throw new AuthenticationFailException ("\nThere Was A Problem In Authenticating. Please Try Again Later");
 			}
 		}
-        
-		ArrayList <HttpCookie> cookieList = CookieManager.getConnection().getAllValidCookiesForPath("/");
 		
-		for (HttpCookie c : cookieList) {
-			String cookie = c.toString()+";";
-			//cookie = cookie + " Max-Age="+c.getMaxAge();
-			System.out.println (cookie);
-			con.addRequestProperty("Cookie", cookie);
+		ArrayList<HttpCookie> cookiesList = CookieManager.getConnection().getAllCookiesForPath("/");
+		
+		for (HttpCookie cookie : cookiesList) {
+			String cookieVal = cookie.getName() +"="+cookie.getValue() +";";
+			cookieVal = cookieVal + " Max-Age=90;";
+			con.addRequestProperty("Cookie", cookieVal);
 		}
-		
         
-		
 	   	OutputStream os = con.getOutputStream();
 		os.write(requestBody, 0, requestBody.length); 
 		
@@ -86,14 +82,12 @@ public class AuthorConnections{
 	}
 	
 	private boolean getAuthenticated (String path)  {
-		try {
+		try {			
 			ArrayList <HttpCookie> cookieList = CookieManager.getConnection().getAllValidCookiesForPath(path);
 			
-			if (cookieList.isEmpty()) {	
-				
+			if (cookieList.isEmpty()) {					
 				PersistentObjectList persistentObjList = PersistentObjectList.getConnection ();
 				RequestPayLoadGenerator payLoadGenCon = RequestPayLoadGenerator.getConnection();
-				
 				byte payload [] = payLoadGenCon.textPayLoadGenerator(persistentObjList.getUserProfile());
 				
 				LoginConnection loginCon = LoginConnection.getConnection();	
@@ -112,7 +106,7 @@ public class AuthorConnections{
 				return true;
 			}
 		}
-		catch (Exception e) {
+		catch (Exception e) {			
 			return false;
 		}	
 	}

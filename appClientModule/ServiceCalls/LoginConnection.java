@@ -47,37 +47,26 @@ public class LoginConnection {
 		String path = null;
 		if (cookiesHeader != null) {
 			CookieManager cookiemanager = CookieManager.getConnection();
-			System.out.println (" ");
 			for (String cookie : cookiesHeader) {
-				System.out.println (cookie);
 				HttpCookie httpCookie = HttpCookie.parse(cookie).get(0);
 				
-				if (httpCookie.getMaxAge() < 0) {
-					path = httpCookie.getPath()!=null ? httpCookie.getPath() : "/";
-					System.out.println ("Found Cookie To Delete");
-					cookiemanager.deleteCookie(path, httpCookie);
-				}
-				else {
-					String cookieValPairs [] = cookie.split(";");
-					time = null;
-					for (String valPair : cookieValPairs) {
-						valPair = valPair.trim();
-						if (valPair.startsWith("Expires")){
-							time = valPair.split(",",0)[1].trim();
-							time = (time.replace ("GMT", "")).trim();
-							//System.out.println ("Cookie Valid Time " + time);
-						}
+				String cookieValPairs [] = cookie.split(";");
+				time = null;
+				for (String valPair : cookieValPairs) {
+					valPair = valPair.trim();
+					if (valPair.startsWith("Expires")){
+						time = valPair.split(",",0)[1].trim();
+						time = (time.replace ("GMT", "")).trim();
 					}
-					path = httpCookie.getPath()!=null ? httpCookie.getPath() : "/";
-					if (time == null) {
-						time = "Session";
-					}
-					cookiemanager.addCookie(path, httpCookie, time);
 				}
+				path = httpCookie.getPath()!=null ? httpCookie.getPath() : "/";
+				if (time == null) {
+					time = "Session";
+				}
+				cookiemanager.addCookie(path, httpCookie, time);				
 			}	
 			cookiemanager.printAllCookies();
-		}
-		
+		}		
 		
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 

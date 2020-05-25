@@ -21,7 +21,7 @@ public class TestConnection {
 		return singletonCon;
 	}
 	
-	public void testConnection () {
+	public void testConnection (String usrName, String passwd, String message) {
 		System.out.println ("testConnection Called");
 		
 		try {
@@ -29,12 +29,13 @@ public class TestConnection {
 			URL obj = new URL(SERVICE_URL + "/test/test");
 			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 			con.setRequestMethod("POST");
-			//con.addRequestProperty ("Accept", resContentType);
-			//con.addRequestProperty ("Content-Type", reqContentType);
 			con.setDoOutput(true);	
 			con.setConnectTimeout(5000);
-			con.setReadTimeout(5000);     
-			byte requestBody [] = "Hello Test".getBytes();
+			con.setReadTimeout(5000);  
+			con.setRequestProperty("userName", usrName);
+			con.setRequestProperty("passWD", passwd);
+			
+			byte requestBody [] = message.getBytes();
 		
 			OutputStream os = con.getOutputStream();
 			os.write(requestBody, 0, requestBody.length);
@@ -52,7 +53,7 @@ public class TestConnection {
 				response.append("\n" + responseLine.trim());
 			}
 			
-			System.out.println ("Servlet Response " + response.toString());
+			System.out.print("Servlet Response " + response.toString());
 		}
 		catch (Exception e) {
 			e.printStackTrace();
