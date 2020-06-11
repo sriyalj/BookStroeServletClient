@@ -21,7 +21,7 @@ public class TestConnection {
 		return singletonCon;
 	}
 	
-	public void testConnection (String usrName, String passwd, String message) {
+	public String testConnection (String usrName, String passwd, String message) {
 		System.out.println ("testConnection Called");
 		
 		try {
@@ -32,17 +32,16 @@ public class TestConnection {
 			con.setDoOutput(true);	
 			con.setConnectTimeout(5000);
 			con.setReadTimeout(5000);  
-			con.setRequestProperty("userName", usrName);
-			con.setRequestProperty("passWD", passwd);
+			con.addRequestProperty("userName", usrName);
+			con.addRequestProperty("passWD", passwd);
 			
-			byte requestBody [] = message.getBytes();
+			byte requestBody [] = usrName.getBytes();
 		
 			OutputStream os = con.getOutputStream();
 			os.write(requestBody, 0, requestBody.length);
-			System.out.println ("Calling done");
 			
 			int responseCode = con.getResponseCode();	
-			System.out.println ("Response " + responseCode);
+			System.out.println ("Server Response Code " + responseCode);
 			
 			String responseLine = null;
 			
@@ -50,7 +49,45 @@ public class TestConnection {
 			StringBuilder response = new StringBuilder();
 			
 			while ((responseLine = br.readLine()) != null) {
-				response.append("\n" + responseLine.trim());
+				response.append(responseLine.trim());
+			}
+			
+			System.out.print("Servlet Response " + response.toString());
+			return response.toString();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}	
+	}
+	
+	public void testConnection2 (String usrID) {
+		System.out.println ("testConnection Called");
+		
+		try {
+		
+			URL obj = new URL(SERVICE_URL + "/test/test2");
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			con.setRequestMethod("POST");
+			con.setDoOutput(true);	
+			con.setConnectTimeout(5000);
+			con.setReadTimeout(5000); 
+			
+			byte requestBody [] = usrID.getBytes();
+		
+			OutputStream os = con.getOutputStream();
+			os.write(requestBody, 0, requestBody.length);
+			
+			int responseCode = con.getResponseCode();	
+			System.out.println ("Server Response Code " + responseCode);
+			
+			String responseLine = null;
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
+			StringBuilder response = new StringBuilder();
+			
+			while ((responseLine = br.readLine()) != null) {
+				response.append(responseLine.trim());
 			}
 			
 			System.out.print("Servlet Response " + response.toString());

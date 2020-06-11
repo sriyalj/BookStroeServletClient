@@ -147,7 +147,7 @@ public class Main {
 	}
 			
 	public static void main(String[] args)  {		// TODO Auto-generated method stub
-		/*
+		
 		boolean loginStatus = true;
 		int loginAttemptCnt = 0;
 		
@@ -169,37 +169,12 @@ public class Main {
 		}	
 		
 		new Main().showMainMenu();
-		*/
-		
-		new Main().textConnection();
+				
 	}
 	/* (non-Java-doc)
 	 * @see java.lang.Object#Object()
 	 */
 	
-	public void textConnection () {
-		Scanner scn = new Scanner (System.in);	
-		
-		while (true) {
-		
-			System.out.print ("User Name : ");
-			String usrName = scn.next();
-			System.out.print ("Password : ");
-			String passWD = scn.next();
-			System.out.print ("Message : ");
-			String msg = scn.next();
-			System.out.print ("Quit : ");
-			int val = scn.nextInt();
-		
-			if (val == 0) {
-				System.exit(val);
-			}
-		
-			TestConnection.getConnection().testConnection(usrName, passWD, msg);
-			System.out.println (" ");
-		}	
-		
-	}
 }
 
 
